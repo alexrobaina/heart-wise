@@ -1,0 +1,123 @@
+'use client'
+
+import React, { useState } from 'react'
+import { useForm, FormProvider } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { onboardingSchemas } from '@/schemas/onboardingSchema'
+import { WelcomeScreen } from '@/components/organisms/WelcomeScreen'
+import { StepOne } from '@/components/organisms/Onboarding/StepOne'
+import { StepTwo } from '@/components/organisms/Onboarding/StepTwo'
+import { StepThree } from '@/components/organisms/Onboarding/StepThree'
+import { StepFour } from '@/components/organisms/Onboarding/StepFour'
+import { StepFive } from '@/components/organisms/Onboarding/StepFive'
+import { NavigationControls } from '@/components/molecules/NavigationControls'
+import { redirect } from 'next/navigation'
+import womanAnimation from '@/assets/lottie/female-work.json'
+import { useSession } from 'next-auth/react'
+
+const steps = [StepOne, StepTwo, StepThree, StepFour, StepFive]
+
+export default function OnboardingPage() {
+  const { data: session } = useSession()
+
+  if (!session) {
+    redirect('/') // or to /api/auth/signin
+  }
+
+  const [currentStep, setCurrentStep] = useState(0)
+  const [showWelcome, setShowWelcome] = useState(true)
+  const [showCompleteSteps, setShowCompleteSteps] = useState(false)
+
+  const methods = useForm({
+    resolver: yupResolver(onboardingSchemas[currentStep]),
+    mode: 'onChange',
+  })
+
+  const StepComponent = steps[currentStep]
+
+  const onSubmit = (data) => {
+    console.log('Form data for step', currentStep + 1, data)
+
+    if (currentStep < steps.length - 1) {
+      return setCurrentStep((prev) => prev + 1)
+    }
+    setShowCompleteSteps(true)
+  }
+
+  const goToChat = () => {
+    redirect('/chat')
+  }
+
+  const onBack = () => {
+    setCurrentStep((prev) => Math.max(prev - 1, 0))
+  }
+
+  if (showCompleteSteps) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+        <WelcomeScreen
+          title="¡Felicidades!"
+          subtitle="Has completado el proceso de onboarding."
+          onStart={goToChat}
+          buttonText="Ir al chat"
+          lottieAnimation={womanAnimation}
+        />
+      </div>
+    )
+  }
+
+  if (showWelcome) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+        <WelcomeScreen
+          title="Bienvenido a Conscious Love"
+          subtitle="Comienza el proceso de onboarding para conocerte mejor"
+          onStart={() => setShowWelcome(false)}
+          buttonText="Comenzar"
+          lottieAnimation={womanAnimation}
+        />
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+      <div className="mb-6 text-center">
+        <h1 className="text-3xl font-bold mb-2">Onboarding</h1>
+        <div className="flex justify-center mb-1 w-full mt-10">
+          {steps.map((_step, index) => (
+            <span
+              key={index}
+              className={`w-8 h-8 rounded-full flex justify-center items-center ${
+                index <= currentStep ? 'bg-blue-600' : 'bg-gray-300'
+              } mr-2`}
+            >
+              <div
+                onClick={() => setCurrentStep(index)}
+                className={`${
+                  index === currentStep ? 'text-white' : 'text-gray-600'
+                } font-semibold cursor-pointer`}
+              >
+                {index + 1}
+              </div>
+            </span>
+          ))}
+        </div>
+      </div>
+      <FormProvider {...methods} key={currentStep}>
+        <form
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className="w-full max-w-md p-6 bg-white rounded-lg shadow-md h-auto"
+        >
+          <StepComponent />
+          <NavigationControls
+            onPrev={onBack}
+            isFirstStep={currentStep === 0}
+            isLastStep={currentStep === steps.length - 1}
+            isNextDisabled={!methods.formState.isValid}
+          />
+        </form>
+      </FormProvider>
+    </div>
+  )
+}
