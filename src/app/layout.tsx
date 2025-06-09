@@ -45,8 +45,8 @@ export default function RootLayout({
       >
         <Suspense
           fallback={
-            <div className="flex justify-center">
-              <FaSpinner className="animate-spin h-5 w-5 text-indigo-500" />
+            <div className="flex justify-center items-center h-screen">
+              <FaSpinner className="animate-spin h-5 w-5 text-amber-500" />
             </div>
           }
         >

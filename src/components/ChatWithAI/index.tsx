@@ -42,6 +42,12 @@ export default function ChatWithAI({
     }
   }
 
+  useEffect(() => {
+    if (textareaRef.current && !loading) {
+      textareaRef.current.focus()
+    }
+  }, [input, loading])
+
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value)
     if (textareaRef.current) {
@@ -118,9 +124,9 @@ export default function ChatWithAI({
           e.preventDefault()
           if (!loading && input.trim()) sendMessage()
         }}
-        className="fixed bottom-8 left-0 right-0 z-50 px-4"
+        className="fixed bottom-8 left-0 right-0 z-40 px-4"
       >
-        <div className="flex flex-col justify-center items-center gap-2 max-w-3xl mx-auto">
+        <div className="flex flex-col justify-center items-end gap-2 max-w-3xl mx-auto">
           {showScrollDown && (
             <button
               onClick={() =>
@@ -136,7 +142,7 @@ export default function ChatWithAI({
               <IoMdArrowRoundDown size={20} />
             </button>
           )}
-          <div className="relative w-full">
+          <div className="relative w-full p-0 md:pl-44">
             <textarea
               value={input}
               ref={textareaRef}
@@ -144,7 +150,7 @@ export default function ChatWithAI({
               onKeyDown={handleKeyDown}
               placeholder="Escribe tu mensaje..."
               rows={1}
-              className="resize-none w-full rounded-xl px-4 py-4 text-amber-900 placeholder-amber-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base max-h-[300px] scrollbar-thumb-amber-800 scrollbar-track-transparent scrollbar-thin"
+              className="resize-none w-full rounded-xl px-4 py-8 text-amber-900 placeholder-amber-500 focus:outline-none focus:ring-2 ring-amber-500 focus:ring-amber-500 text-base max-h-[300px] scrollbar-thumb-amber-800 scrollbar-track-transparent scrollbar-thin"
               disabled={loading}
             />
             <button
