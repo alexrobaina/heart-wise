@@ -1,11 +1,11 @@
 // components/atoms/Checkbox.tsx
-import React from 'react';
+import React from 'react'
 
 interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-  showInput?: boolean;
-  inputValue?: string;
-  onInputChange?: (value: string) => void;
+  label: string
+  showInput?: boolean
+  inputValue?: string
+  onInputChange?: (value: string) => void
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -18,7 +18,9 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 }) => {
   return (
     <div className="space-y-1">
-      <label className={`inline-flex items-center space-x-2 cursor-pointer ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}>
+      <label
+        className={`inline-flex items-center space-x-2 cursor-pointer ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+      >
         <input
           type="radio"
           className="form-checkbox text-blue-600 focus:ring-blue-500"
@@ -36,6 +38,5 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         />
       )}
     </div>
-  );
-};
-
+  )
+}

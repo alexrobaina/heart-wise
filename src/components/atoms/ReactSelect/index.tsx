@@ -16,13 +16,14 @@ export interface OptionType {
 }
 
 export interface BaseSelectProps {
-  name: string
+  name?: string
   isMulti?: boolean
   className?: string
   isLoading?: boolean
   placeholder?: string
   options: OptionType[]
-  error?: boolean | string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error?: boolean | string | any
   isClearable?: boolean
   closeMenuOnSelect?: boolean
   value?: OptionType | OptionType[] | null
@@ -36,7 +37,8 @@ export interface BaseSelectProps {
   onChange: (
     newValue: MultiValue<OptionType> | SingleValue<OptionType>,
     actionMeta?: ActionMeta<OptionType>,
-  ) => void
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ) => void | any
 }
 
 const TruncatedMultiValueLabel = (
@@ -98,8 +100,8 @@ export const ReactSelect = ({
       backgroundColor: state.isSelected
         ? '#ff6647'
         : state.isFocused
-        ? '#ffe5e0'
-        : 'white',
+          ? '#ffe5e0'
+          : 'white',
       color: state.isSelected ? 'white' : '#374151',
       padding: '8px 12px',
       cursor: 'pointer',

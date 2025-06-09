@@ -1,6 +1,7 @@
 // app/layout.tsx
 
 import type { Metadata } from 'next'
+import { FaSpinner } from 'react-icons/fa'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { Sidebar } from '@/components/organisms/SideBar'
@@ -19,13 +20,13 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Conscious Love',
+  title: 'Heart wise',
   description: 'A platform for AI-driven relationship insights',
   openGraph: {
-    title: 'Conscious Love',
+    title: 'Heart wise',
     description: 'A platform for AI-driven relationship insights',
     url: 'https://consciouslove.com',
-    siteName: 'Conscious Love',
+    siteName: 'Heart wise',
   },
 }
 
@@ -42,12 +43,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-amber-50`}
       >
-        <Providers>
-          <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="flex-1 h-full">{children}</main>
-          </div>
-        </Providers>
+        <Suspense
+          fallback={
+            <div className="flex justify-center">
+              <FaSpinner className="animate-spin h-5 w-5 text-indigo-500" />
+            </div>
+          }
+        >
+          <Providers>
+            <div className="flex min-h-screen">
+              <Sidebar />
+              <main className="flex-1 h-full">{children}</main>
+            </div>
+          </Providers>
+        </Suspense>
       </body>
     </html>
   )

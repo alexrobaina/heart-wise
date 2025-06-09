@@ -1,21 +1,20 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-'use client';
+'use client'
 
-import Lottie, { LottieRefCurrentProps} from 'lottie-react';
-import { motion } from 'framer-motion';
-import { FC, useEffect, useRef } from 'react';
+import Lottie, { LottieRefCurrentProps } from 'lottie-react'
+import { motion } from 'framer-motion'
+import { FC, useEffect, useRef } from 'react'
 
 interface LottieAnimationProps {
-  speed?: number;
-  delay?: number;
-  animation: object;
-  width?: number | string;
+  speed?: number
+  delay?: number
+  animation: object
+  width?: number | string
 }
 
 const VARIANTS_OPACITY = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
-};
+}
 
 export const LottieAnimation: FC<LottieAnimationProps> = ({
   width,
@@ -23,13 +22,13 @@ export const LottieAnimation: FC<LottieAnimationProps> = ({
   delay = 0,
   speed = 1,
 }) => {
-  const lottieRef = useRef<LottieRefCurrentProps>(null);
+  const lottieRef = useRef<LottieRefCurrentProps>(null)
 
   useEffect(() => {
     if (lottieRef.current) {
-      lottieRef.current.setSpeed(0.5);
+      lottieRef.current.setSpeed(0.5)
     }
-  }, [speed]);
+  }, [speed])
 
   return (
     <motion.div
@@ -39,7 +38,12 @@ export const LottieAnimation: FC<LottieAnimationProps> = ({
       transition={{ ease: 'easeOut', delay }}
       className="w-full h-full flex justify-center items-center"
     >
-      <Lottie lottieRef={lottieRef} style={{ width }} animationData={animation} loop />
+      <Lottie
+        lottieRef={lottieRef}
+        style={{ width }}
+        animationData={animation}
+        loop
+      />
     </motion.div>
-  );
-};
+  )
+}

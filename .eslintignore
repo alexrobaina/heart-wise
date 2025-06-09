@@ -1,0 +1,8 @@
+# Ignore all generated files
+src/generated/**
+
+# You can add other things to ignore if needed, e.g.:
+node_modules/
+.next/
+dist/
+build/

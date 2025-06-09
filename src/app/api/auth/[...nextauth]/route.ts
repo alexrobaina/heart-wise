@@ -19,6 +19,8 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     session({ session, user }) {
       session.user.id = user.id
       session.user.email = user.email || null // Ensure email is set to null if not available

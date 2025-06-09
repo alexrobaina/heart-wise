@@ -10,7 +10,8 @@ interface FormGroupProps {
   helperText?: string
   children: ReactNode
   shouldShow?: boolean
-  error?: string | undefined
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error?: string | any
 }
 
 export const FormGroup: FC<FormGroupProps> = ({

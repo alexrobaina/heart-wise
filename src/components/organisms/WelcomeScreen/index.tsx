@@ -1,16 +1,16 @@
 // components/organisms/WelcomeScreen/index.tsx
-import { FC } from 'react';
-import { Button } from '@/components/atoms/Button';
-import Image from 'next/image';
-import { LottieAnimation } from '@/components/atoms/LottieAnimations';
+import { FC } from 'react'
+import { Button } from '@/components/atoms/Button'
+import Image from 'next/image'
+import { LottieAnimation } from '@/components/atoms/LottieAnimations'
 
 interface WelcomeScreenProps {
-  title: string;
-  subtitle?: string;
-  imageUrl?: string;
-  onStart: () => void;
-  buttonText?: string;
-  lottieAnimation?: object;
+  title: string
+  subtitle?: string
+  imageUrl?: string
+  onStart: () => void
+  buttonText?: string
+  lottieAnimation?: object
 }
 
 export const WelcomeScreen: FC<WelcomeScreenProps> = ({
@@ -43,6 +43,5 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
         {buttonText}
       </Button>
     </div>
-  );
-};
-
+  )
+}

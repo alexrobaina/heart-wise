@@ -11,7 +11,7 @@ export const onboardingSchemas = [
     haveChildren: Yup.string().required('Este campo es obligatorio'),
     childrenDetails: Yup.string().when(
       'haveChildren',
-      (haveChildren: any, schema) => {
+      (haveChildren: unknown, schema) => {
         if (Array.isArray(haveChildren)) {
           return haveChildren.includes('Sí')
             ? schema.required('Por favor, proporciona detalles de los hijos')

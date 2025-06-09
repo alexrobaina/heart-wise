@@ -80,6 +80,8 @@ export const StepOne = () => {
           placeholder="Selecciona una opción"
           isClearable
           value={relationshipStatusOption}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           onChange={(selected) => onRelChange(selected ? selected.value : null)}
           className="w-full"
           error={relError?.message || errors.relationshipStatus?.message}
@@ -97,6 +99,8 @@ export const StepOne = () => {
           isClearable
           value={genderSelectedOption}
           onChange={(selected) =>
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             onGenderChange(selected ? selected.value : null)
           }
           className="w-full"

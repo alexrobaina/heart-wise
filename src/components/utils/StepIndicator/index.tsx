@@ -1,9 +1,9 @@
 // components/utils/StepIndicator/index.tsx
-import {FC} from 'react';
+import { FC } from 'react'
 
 interface StepIndicatorProps {
-  total: number;
-  current: number;
+  total: number
+  current: number
 }
 
 export const StepIndicator: FC<StepIndicatorProps> = ({ total, current }) => {
@@ -18,5 +18,5 @@ export const StepIndicator: FC<StepIndicatorProps> = ({ total, current }) => {
         />
       ))}
     </div>
-  );
-};
+  )
+}

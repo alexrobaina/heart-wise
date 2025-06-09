@@ -27,7 +27,9 @@ export default function AcceptInviteCode() {
   return (
     <div className="p-4 border rounded-lg shadow max-w-md">
       <h2 className="text-lg font-semibold mb-2">¿Te invitaron?</h2>
-      <p className="text-sm text-gray-500 mb-4">Ingresa el código que recibiste.</p>
+      <p className="text-sm text-gray-500 mb-4">
+        Ingresa el código que recibiste.
+      </p>
 
       <input
         type="text"
