@@ -5,6 +5,7 @@ async function fetchUserMessages(chatId: string) {
   try {
     const response = await axios.get(`/api/chat/${chatId}`)
     return response.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     throw new Error(
       error.response?.data?.error || 'Failed to fetch user messages',

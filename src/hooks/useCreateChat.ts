@@ -18,7 +18,8 @@ export function useCreateChat() {
   const [data, setData] = useState(null)
 
   async function createChatHandler(data: {
-    initialMessage?: string
+    contextRaw: object
+    contextPrompt: string
     title?: string
   }) {
     setSuccess(false)
@@ -28,6 +29,8 @@ export function useCreateChat() {
       const chat = await createChat(data)
       setSuccess(true)
       setData(chat)
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setError(e)
       setSuccess(false)

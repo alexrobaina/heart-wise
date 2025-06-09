@@ -20,7 +20,10 @@ export async function POST() {
   })
 
   if (user?.coupleId) {
-    return NextResponse.json({ error: 'You are already in a couple' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'You are already in a couple' },
+      { status: 400 },
+    )
   }
 
   // Generar código aleatorio

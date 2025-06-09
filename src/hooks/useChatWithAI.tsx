@@ -6,7 +6,10 @@ export type ChatMessage = {
   content: string
 }
 
-export function useChatWithAI(chatId, initialMessages: ChatMessage[] = []) {
+export function useChatWithAI(
+  chatId: string,
+  initialMessages: ChatMessage[] = [],
+) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
@@ -28,6 +31,7 @@ export function useChatWithAI(chatId, initialMessages: ChatMessage[] = []) {
       const data = await res.json()
       const aiMessage = { role: 'ai' as const, content: data.response }
       setMessages((prev) => [...prev, aiMessage])
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setMessages((prev) => [
         ...prev,

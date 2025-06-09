@@ -1,4 +1,22 @@
-export const createContextPrompt = (data: any) => `
+export type contextPrompt = {
+  relationshipStatus: string
+  relationshipDuration: string
+  partnerGender: string
+  haveChildren: string
+  childrenDetails: string
+  livingTogether: string
+  location: string
+  challenges: string[]
+  bothInterested: string
+  triedTherapy: string
+  consideringSeparation: string
+  legalSupport: string
+  expectations: string[]
+  communicationTone: string
+  receiveExercises: string
+}
+
+export const createContextPrompt = (data: contextPrompt) => `
 ## Relationship Context ##
 - Status: ${data.relationshipStatus} (${data.relationshipDuration} years)
 - Partner: ${data.partnerGender}

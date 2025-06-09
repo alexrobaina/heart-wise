@@ -1,22 +1,22 @@
 // components/molecules/OptionList/index.tsx
-import Radio from '@/components/atoms/Checkbox';
-import { Checkbox } from '@/components/atoms/Radio';
-import React from 'react';
+import Radio from '@/components/atoms/Checkbox'
+import { Checkbox } from '@/components/atoms/Radio'
+import React from 'react'
 
 interface Option {
-  label: string;
-  value: string;
-  other?: boolean;
+  label: string
+  value: string
+  other?: boolean
 }
 
 interface OptionListProps {
-  type: 'radio' | 'checkbox';
-  name: string;
-  options: Option[];
-  selected: string[]; // para radio también, pero con un solo valor
-  onChange: (newSelected: string[], otherText?: string) => void;
-  otherText?: string;
-  onOtherTextChange?: (text: string) => void;
+  type: 'radio' | 'checkbox'
+  name: string
+  options: Option[]
+  selected: string[] // para radio también, pero con un solo valor
+  onChange: (newSelected: string[], otherText?: string) => void
+  otherText?: string
+  onOtherTextChange?: (text: string) => void
 }
 
 export const OptionList: React.FC<OptionListProps> = ({
@@ -32,17 +32,17 @@ export const OptionList: React.FC<OptionListProps> = ({
     if (type === 'checkbox') {
       const newSelected = checked
         ? [...selected, value]
-        : selected.filter((v) => v !== value);
-      onChange(newSelected, otherText);
+        : selected.filter((v) => v !== value)
+      onChange(newSelected, otherText)
     } else {
-      onChange([value], otherText);
+      onChange([value], otherText)
     }
-  };
+  }
 
   return (
     <div className="space-y-2">
       {options.map(({ label, value, other }) => {
-        const isChecked = selected.includes(value);
+        const isChecked = selected.includes(value)
         if (type === 'checkbox') {
           return (
             <Checkbox
@@ -54,7 +54,7 @@ export const OptionList: React.FC<OptionListProps> = ({
               inputValue={otherText}
               onInputChange={onOtherTextChange}
             />
-          );
+          )
         } else {
           return (
             <Radio
@@ -65,10 +65,9 @@ export const OptionList: React.FC<OptionListProps> = ({
               checked={isChecked}
               onChange={() => onChange([value], other ? otherText : '')}
             />
-          );
+          )
         }
       })}
     </div>
-  );
-};
-
+  )
+}

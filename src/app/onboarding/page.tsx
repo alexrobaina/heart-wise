@@ -64,7 +64,7 @@ export default function OnboardingPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-amber-100 px-4">
         <WelcomeScreen
-          title="Bienvenido a Conscious Love"
+          title="Bienvenido a Heart wise"
           subtitle="Comienza el proceso de onboarding para conocerte mejor"
           onStart={() => setShowWelcome(false)}
           buttonText="Comenzar"
@@ -83,7 +83,7 @@ export default function OnboardingPage() {
             <span
               key={index}
               className={`w-8 h-8 rounded-full flex justify-center items-center ${
-                index <= currentStep ? 'bg-blue-600' : 'bg-amber-300'
+                index <= currentStep ? 'bg-amber-600' : 'bg-amber-200'
               } mr-2`}
             >
               <div

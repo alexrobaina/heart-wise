@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import React from 'react'
@@ -92,6 +93,9 @@ export function ChatBubble({
                       {...props}
                     />
                   ),
+
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
                   code: ({ inline, className, children, ...props }) => {
                     const match = /language-(\w+)/.exec(className || '')
                     return !inline ? (

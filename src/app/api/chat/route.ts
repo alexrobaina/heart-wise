@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) {
@@ -54,7 +55,10 @@ export async function GET(req: NextRequest) {
       },
     })
     return NextResponse.json(chats)
-  } catch (error) {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.log(error)
     return NextResponse.json(
       { error: 'Failed to fetch chats' },
       { status: 500 },

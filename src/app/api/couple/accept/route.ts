@@ -18,12 +18,22 @@ export async function POST(req: Request) {
     include: { inviter: true },
   })
 
-  if (!invite || invite.used || (invite.expiresAt && new Date() > invite.expiresAt)) {
-    return NextResponse.json({ error: 'Invalid or expired code' }, { status: 400 })
+  if (
+    !invite ||
+    invite.used ||
+    (invite.expiresAt && new Date() > invite.expiresAt)
+  ) {
+    return NextResponse.json(
+      { error: 'Invalid or expired code' },
+      { status: 400 },
+    )
   }
 
   if (invite.inviterId === userId) {
-    return NextResponse.json({ error: 'You cannot accept your own code' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'You cannot accept your own code' },
+      { status: 400 },
+    )
   }
 
   // Validar que ninguno esté en pareja
@@ -33,7 +43,10 @@ export async function POST(req: Request) {
   ])
 
   if (inviter?.coupleId || accepter?.coupleId) {
-    return NextResponse.json({ error: 'One or both users already in a couple' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'One or both users already in a couple' },
+      { status: 400 },
+    )
   }
 
   const couple = await prisma.couple.create({
@@ -44,8 +57,14 @@ export async function POST(req: Request) {
   })
 
   await Promise.all([
-    prisma.user.update({ where: { id: invite.inviterId }, data: { coupleId: couple.id } }),
-    prisma.user.update({ where: { id: userId }, data: { coupleId: couple.id } }),
+    prisma.user.update({
+      where: { id: invite.inviterId },
+      data: { coupleId: couple.id },
+    }),
+    prisma.user.update({
+      where: { id: userId },
+      data: { coupleId: couple.id },
+    }),
     prisma.inviteCode.update({
       where: { code },
       data: {

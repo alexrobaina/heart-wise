@@ -58,6 +58,7 @@ export default function ChatWithAI({
     setShowScrollDown(false)
   }, [initialMessages, externalScrollRef, setShowScrollDown])
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleScroll = () => {
     const container = externalScrollRef.current
     if (!container) return
@@ -72,7 +73,7 @@ export default function ChatWithAI({
     container.addEventListener('scroll', handleScroll)
     handleScroll()
     return () => container.removeEventListener('scroll', handleScroll)
-  }, [externalScrollRef])
+  }, [externalScrollRef, handleScroll])
 
   useEffect(() => {
     if (textareaRef.current) {

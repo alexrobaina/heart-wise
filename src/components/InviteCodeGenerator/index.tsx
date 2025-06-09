@@ -17,7 +17,9 @@ export default function InviteCodeGenerator() {
   return (
     <div className="p-4 border rounded-lg shadow max-w-md">
       <h2 className="text-lg font-semibold mb-2">Invita a tu pareja</h2>
-      <p className="text-sm text-gray-500 mb-4">Presiona para generar un código único.</p>
+      <p className="text-sm text-gray-500 mb-4">
+        Presiona para generar un código único.
+      </p>
       <button
         onClick={generateCode}
         disabled={loading}
