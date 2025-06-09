@@ -21,10 +21,11 @@ model User {
   sessions    Session[]
   couple1     Couple[]     @relation("User1Couples")
   couple2     Couple[]     @relation("User2Couples")
-  messages    Message[]
   accounts    Account[]
+  chats       Chat[]
   inviteCodes InviteCode[] @relation("UserInviterCodes")
   usedCodes   InviteCode[] @relation("UserUsedCodes")
+  Message     Message[]
 }
 
 model Couple {
@@ -39,20 +40,39 @@ model Couple {
   user2Id String
 }
 
+model Chat {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  title      String   @default("New Conversation")
+  isArchived Boolean  @default(false)
+
+  // Relations
+  userId   String
+  user     User      @relation(fields: [userId], references: [id])
+  messages Message[]
+
+  context       Json? // Store raw onboarding data
+  contextPrompt String? // Store generated prompt
+}
+
 model Message {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
+  content   String
+  role      MessageRole // 'user' or 'ai' or 'system'
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  role    MessageRole // 'user' or 'ai'
-  content String
+  // Relations
+  chatId String
+  chat   Chat    @relation(fields: [chatId], references: [id])
+  userId String? // Null for AI messages
+  user   User?   @relation(fields: [userId], references: [id])
 }
 
 enum MessageRole {
   user
   ai
+  system
 }
 
 // Optional: NextAuth compatible session model

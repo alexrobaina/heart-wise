@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { onboardingSchemas } from '@/schemas/onboardingSchema'
@@ -14,19 +14,21 @@ import { NavigationControls } from '@/components/molecules/NavigationControls'
 import { redirect } from 'next/navigation'
 import womanAnimation from '@/assets/lottie/female-work.json'
 import { useSession } from 'next-auth/react'
+import { useCreateChat } from '@/hooks/useCreateChat'
+import { createContextPrompt } from '@/lib/promptUtils'
 
 const steps = [StepOne, StepTwo, StepThree, StepFour, StepFive]
 
 export default function OnboardingPage() {
   const { data: session } = useSession()
-
-  if (!session) {
-    redirect('/') // or to /api/auth/signin
-  }
-
   const [currentStep, setCurrentStep] = useState(0)
   const [showWelcome, setShowWelcome] = useState(true)
   const [showCompleteSteps, setShowCompleteSteps] = useState(false)
+  const { createChat, isSuccess, data } = useCreateChat()
+  console.log(data)
+  if (!session) {
+    redirect('/') // or to /api/auth/signin
+  }
 
   const methods = useForm({
     resolver: yupResolver(onboardingSchemas[currentStep]),
@@ -35,18 +37,29 @@ export default function OnboardingPage() {
 
   const StepComponent = steps[currentStep]
 
-  const onSubmit = (data) => {
-    console.log('Form data for step', currentStep + 1, data)
-
+  const onSubmit = async (data) => {
     if (currentStep < steps.length - 1) {
       return setCurrentStep((prev) => prev + 1)
     }
-    setShowCompleteSteps(true)
+
+    const contextPrompt = await createContextPrompt(data)
+    const contextRaw = data
+    console.log(1)
+
+    createChat({
+      contextPrompt,
+      contextRaw,
+      title: 'Onboarding Chat',
+    })
   }
 
-  const goToChat = () => {
-    redirect('/chat')
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      redirect(`chat/${data.id}`)
+    }
+  })
+
+  const goToChat = () => {}
 
   const onBack = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0))

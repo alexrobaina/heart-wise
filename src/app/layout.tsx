@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { Sidebar } from '@/components/organisms/SideBar'
 import { Providers } from './Providers'
+import { Suspense } from 'react'
 
 // Load Geist fonts and assign to CSS variables
 const geistSans = Geist({
@@ -41,20 +42,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-800`}
       >
-        <Providers>
-          {/* 
-              Outer flex container:
-              - Sidebar fixed width on the left
-              - Main content scrolls on the right
-            */}
-          <div className="flex min-h-screen overflow-hidden">
-            {/* 1) Sidebar (hidden on small screens by design of the component) */}
-            <Sidebar />
-
-            {/* 2) Main content area */}
-            <main className="flex-1 h-full overflow-hidden">{children}</main>
-          </div>
-        </Providers>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Providers>
+            <div className="flex min-h-screen overflow-hidden">
+              <Sidebar />
+              <main className="flex-1 h-full overflow-hidden">{children}</main>
+            </div>
+          </Providers>
+        </Suspense>
       </body>
     </html>
   )

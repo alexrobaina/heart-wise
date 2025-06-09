@@ -87,9 +87,10 @@ export const StepFive = () => {
         }
       >
         <ReactSelect
+          isMulti
+          isClearable
           options={supportPreferenceOptions}
           placeholder="Selecciona una opción"
-          isClearable
           value={supportPreferenceSelectedOption}
           onChange={(selected) =>
             supportPreferenceChange(selected ? selected.value : null)

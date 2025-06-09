@@ -6,6 +6,8 @@ import React, { ReactNode } from 'react'
 import { GoPlusCircle } from 'react-icons/go'
 import Image from 'next/image'
 import { useUser } from '@/hooks/useUser'
+import { redirect } from 'next/navigation'
+import { useUserChats } from '@/hooks/useUserChats'
 
 interface SidebarProps {
   children?: ReactNode
@@ -13,6 +15,12 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const { user: session, isLoading, isAuthenticated } = useUser()
+  const {
+    data: chats,
+    isLoading: chatsLoading,
+    error: chatsError,
+  } = useUserChats()
+  console.log(chats)
 
   // If not logged in
   if (!isAuthenticated) return children
@@ -41,7 +49,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   return (
     <aside
       className="
-        w-64 h-screen fixed top-0
+        w-64 h-screen fixed top-0 z-50
         bg-white dark:bg-gray-900
         p-4 border-r border-gray-200 dark:border-gray-800
         hidden md:flex flex-col
@@ -57,34 +65,48 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 
       {/* Botón “New Chat” */}
       <button
+        onClick={() => redirect('/onboarding')}
         className="
           flex items-center gap-2
           p-2 bg-gray-100 dark:bg-gray-800
           hover:bg-gray-200 dark:hover:bg-gray-700
-          rounded mb-4 transition
+          rounded mb-4 transition cursor-pointer
         "
       >
         <GoPlusCircle className="text-gray-600 dark:text-gray-400" size={20} />
         <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-          New Chat
+          Nuevo chat
         </span>
       </button>
 
-      {/* Lista de chats (scrollable sólo dentro del nav) */}
+      {/* Chats List */}
       <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-1">
-          {[1, 2, 3].map((id) => (
-            <li
-              key={id}
-              className="
-                p-3 text-sm text-gray-900 dark:text-gray-100
-                rounded hover:bg-gray-200 dark:hover:bg-gray-800
-                cursor-pointer transition
-              "
-            >
-              Chat {id}
+          {chatsLoading && (
+            <li className="p-3 text-sm text-gray-600 dark:text-gray-400">
+              Cargando chats...
             </li>
-          ))}
+          )}
+          {chatsError && (
+            <li className="p-3 text-sm text-red-600 dark:text-red-400">
+              No hay chats registrados
+            </li>
+          )}
+          {chats &&
+            chats.map((chat) => (
+              <li
+                key={chat.id}
+                className="p-3 text-sm text-gray-900 dark:text-gray-100 rounded hover:bg-gray-200 dark:hover:bg-gray-800 cursor-pointer transition"
+                onClick={() => redirect(`/chat/${chat.id}`)}
+              >
+                {chat.title || 'Untitled Chat'}
+              </li>
+            ))}
+          {!chatsLoading && chats?.length === 0 && (
+            <li className="p-3 text-sm text-gray-600 dark:text-gray-400">
+              No chats yet. Start a new conversation!
+            </li>
+          )}
         </ul>
       </nav>
 
