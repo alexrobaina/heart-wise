@@ -23,9 +23,7 @@ export default function OnboardingPage() {
   const { data: session } = useSession()
   const [currentStep, setCurrentStep] = useState(0)
   const [showWelcome, setShowWelcome] = useState(true)
-  const [showCompleteSteps, setShowCompleteSteps] = useState(false)
   const { createChat, isSuccess, data } = useCreateChat()
-  console.log(data)
   if (!session) {
     redirect('/') // or to /api/auth/signin
   }
@@ -44,7 +42,6 @@ export default function OnboardingPage() {
 
     const contextPrompt = await createContextPrompt(data)
     const contextRaw = data
-    console.log(1)
 
     createChat({
       contextPrompt,
@@ -59,29 +56,13 @@ export default function OnboardingPage() {
     }
   })
 
-  const goToChat = () => {}
-
   const onBack = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0))
   }
 
-  if (showCompleteSteps) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
-        <WelcomeScreen
-          title="¡Felicidades!"
-          subtitle="Has completado el proceso de onboarding."
-          onStart={goToChat}
-          buttonText="Ir al chat"
-          lottieAnimation={womanAnimation}
-        />
-      </div>
-    )
-  }
-
   if (showWelcome) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-amber-100 px-4">
         <WelcomeScreen
           title="Bienvenido a Conscious Love"
           subtitle="Comienza el proceso de onboarding para conocerte mejor"
@@ -94,7 +75,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-amber-100 px-4">
       <div className="mb-6 text-center">
         <h1 className="text-3xl font-bold mb-2">Onboarding</h1>
         <div className="flex justify-center mb-1 w-full mt-10">
@@ -102,13 +83,13 @@ export default function OnboardingPage() {
             <span
               key={index}
               className={`w-8 h-8 rounded-full flex justify-center items-center ${
-                index <= currentStep ? 'bg-blue-600' : 'bg-gray-300'
+                index <= currentStep ? 'bg-blue-600' : 'bg-amber-300'
               } mr-2`}
             >
               <div
                 onClick={() => setCurrentStep(index)}
                 className={`${
-                  index === currentStep ? 'text-white' : 'text-gray-600'
+                  index === currentStep ? 'text-white' : 'text-amber-600'
                 } font-semibold cursor-pointer`}
               >
                 {index + 1}

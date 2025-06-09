@@ -37,19 +37,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="dark overflow-hidden scrollbar-thumb-gray-900 scrollbar-track-transparent scrollbar-thin"
+      className="scrollbar-thumb-gray-900 scrollbar-track-transparent scrollbar-thin"
     >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-gray-800`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-amber-50`}
       >
-        <Suspense fallback={<div>Loading...</div>}>
-          <Providers>
-            <div className="flex min-h-screen overflow-hidden">
-              <Sidebar />
-              <main className="flex-1 h-full overflow-hidden">{children}</main>
-            </div>
-          </Providers>
-        </Suspense>
+        <Providers>
+          <div className="flex min-h-screen">
+            <Sidebar />
+            <main className="flex-1 h-full">{children}</main>
+          </div>
+        </Providers>
       </body>
     </html>
   )
