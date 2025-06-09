@@ -87,8 +87,8 @@ export default function ChatWithAI({
     <div className="relative w-full flex flex-col px-4 pb-[120px]">
       <div className="max-w-md sm:max-w-2xl w-full mx-auto space-y-2 flex flex-col">
         {messages.length === 0 ? (
-          <div className="text-gray-300 mt-80 flex flex-col justify-center gap-4 items-center">
-            <h1 className="text-center text-gray-300 dark:text-gray-400 text-xl italic mt-10">
+          <div className="text-amber-300 mt-80 flex flex-col justify-center gap-4 items-center">
+            <h1 className="text-center text-amber-300 text-xl italic mt-10">
               ¡Escribe tu primer mensaje para comenzar la conversación!
             </h1>
             <p>Cuentame como te sientes y como te puedo ayudar</p>
@@ -104,7 +104,7 @@ export default function ChatWithAI({
         )}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-4 py-2 text-sm rounded-xl animate-pulse">
+            <div className="bg-amber-100 text-amber-500 px-4 py-2 text-sm rounded-xl animate-pulse">
               La IA está escribiendo…
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function ChatWithAI({
                   behavior: 'smooth',
                 })
               }
-              className="bg-gray-600 w-10 h-10 flex justify-center items-center hover:bg-gray-700 text-white rounded-full shadow-lg z-50"
+              className="bg-amber-600 w-10 h-10 flex justify-center items-center hover:bg-amber-700 text-white rounded-full shadow-lg z-50"
               type="button"
               aria-label="Ir al final"
             >
@@ -143,12 +143,12 @@ export default function ChatWithAI({
               onKeyDown={handleKeyDown}
               placeholder="Escribe tu mensaje..."
               rows={1}
-              className="resize-none w-full rounded-xl px-4 py-4 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base dark:bg-gray-700 max-h-[300px] scrollbar-thumb-gray-800 scrollbar-track-transparent scrollbar-thin"
+              className="resize-none w-full rounded-xl px-4 py-4 text-amber-900 placeholder-amber-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base max-h-[300px] scrollbar-thumb-amber-800 scrollbar-track-transparent scrollbar-thin"
               disabled={loading}
             />
             <button
               type="submit"
-              className="absolute right-4 bottom-4 bg-[#11a37f] hover:bg-[#0e8266] disabled:opacity-50 text-white px-2 py-2 text-sm font-medium w-8 h-8 flex items-center justify-center rounded-full"
+              className="absolute right-4 bottom-4 bg-amber-800 hover:bg-amber-600 disabled:opacity-50 text-white px-2 py-2 text-sm font-medium w-8 h-8 flex items-center justify-center rounded-full"
               disabled={loading || !input.trim()}
               aria-label="Enviar Mensaje"
             >
