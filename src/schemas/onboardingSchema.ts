@@ -53,7 +53,7 @@ export const onboardingSchemas = [
   // Paso 5: Ideas adicionales
   Yup.object().shape({
     communicationTone: Yup.string().required('Este campo es obligatorio'),
-    supportPreference: Yup.string().required('Este campo es obligatorio'),
+    supportPreference: Yup.array().min(1, 'Selecciona al menos opción'),
     receiveExercises: Yup.string().required('Este campo es obligatorio'),
   }),
 ]

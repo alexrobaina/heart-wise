@@ -2,15 +2,18 @@
 'use client'
 import { useRef, useState } from 'react'
 import ChatWithAI from '@/components/ChatWithAI'
-import { useUserMessageAI } from '@/hooks/useUserMessageAI'
+import { useUserChat } from '@/hooks/useUserChat'
+import { useParams } from 'next/navigation'
 
 export default function ChatPage() {
-  const { data: messages, isLoading, error } = useUserMessageAI()
+  const params = useParams()
+
+  const { data: chat, isLoading, error } = useUserChat(params?.chat)
   const [showScrollDown, setShowScrollDown] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
 
   if (isLoading) return <p>Loading...</p>
-  if (error) return <p>Error loading messages</p>
+  if (error) return <p>Error loading chat</p>
 
   return (
     <section
@@ -18,10 +21,12 @@ export default function ChatPage() {
       className="py-8 pr-8 overflow-y-auto h-screen scrollbar-thumb-gray-900 scrollbar-track-transparent scrollbar-thin"
     >
       <ChatWithAI
-        initialMessages={messages}
+        chatId={params?.chat}
+        initialMessages={chat[0].messages}
         showScrollDown={showScrollDown}
         setShowScrollDown={setShowScrollDown}
-        externalScrollRef={scrollContainerRef} // pass ref
+        externalScrollRef={scrollContainerRef}
+        x
       />
     </section>
   )
