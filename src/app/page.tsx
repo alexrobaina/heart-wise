@@ -342,7 +342,10 @@ export default function Home() {
             Comienza tu viaje hacia una comunicación más saludable y una
             conexión más profunda
           </p>
-          <button className="bg-white text-amber-600 hover:bg-amber-50 px-8 py-4 rounded-lg font-semibold text-lg flex items-center justify-center gap-2 transition-all mx-auto">
+          <button
+            onClick={handleLogin}
+            className="bg-white text-amber-600 hover:bg-amber-50 px-8 py-4 rounded-lg font-semibold text-lg flex items-center justify-center gap-2 transition-all mx-auto"
+          >
             <FcGoogle /> Comenzar ahora <FiArrowRight />
           </button>
         </div>
