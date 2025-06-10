@@ -28,7 +28,6 @@ export default function ChatPage() {
         showScrollDown={showScrollDown}
         setShowScrollDown={setShowScrollDown}
         externalScrollRef={scrollContainerRef}
-        x
       />
     </section>
   )
