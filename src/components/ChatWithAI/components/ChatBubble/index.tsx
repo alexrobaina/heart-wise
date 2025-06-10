@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { motion } from 'framer-motion'
-import { FiUser } from 'react-icons/fi'
+import { FiCheck, FiCopy, FiUser } from 'react-icons/fi'
 import { RiRobot2Line } from 'react-icons/ri'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
@@ -23,7 +23,17 @@ export function ChatBubble({
   isFirst,
   isLast,
 }: ChatBubbleProps) {
+  const [copied, setCopied] = useState(false)
   const isUser = role === 'user'
+
+  const handleCopyClick = () => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(content).then(() => {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      })
+    }
+  }
 
   return (
     <motion.div
@@ -52,8 +62,8 @@ export function ChatBubble({
             relative px-4 py-3 rounded-xl
             ${
               isUser
-                ? 'bg-amber-600 text-white rounded-tr-none'
-                : 'bg-amber-100 text-amber-900 rounded-tl-none'
+                ? 'bg-amber-100 text-amber-960 rounded-tr-none'
+                : 'text-amber-960 rounded-tl-none'
             }
             ${isFirst ? (isUser ? 'rounded-tr-none' : 'rounded-tl-none') : ''}
             ${isLast ? (isUser ? 'rounded-br-xl' : 'rounded-bl-xl') : ''}
@@ -160,6 +170,17 @@ export function ChatBubble({
               >
                 {content}
               </ReactMarkdown>
+            )}
+            {!isUser && (
+              <button
+                type="button"
+                onClick={handleCopyClick}
+                aria-label="Copy message to clipboard"
+                className={`absolute -bottom-8 right-1 p-1 rounded-full hover:text-amber-800 focus:outline-none focus:ring-amber-600 
+                ${copied ? 'text-green-500' : 'text-amber-600'}`}
+              >
+                {copied ? <FiCheck size={18} /> : <FiCopy size={18} />}
+              </button>
             )}
           </div>
         </div>

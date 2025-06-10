@@ -19,7 +19,7 @@ import { createContextPrompt } from '@/lib/promptUtils'
 
 const steps = [StepOne, StepTwo, StepThree, StepFour, StepFive]
 
-export default function OnboardingPage() {
+export default function NewChatPage() {
   const { data: session } = useSession()
   const [currentStep, setCurrentStep] = useState(0)
   const [showWelcome, setShowWelcome] = useState(true)
@@ -77,24 +77,25 @@ export default function OnboardingPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-amber-100 px-4">
       <div className="mb-6 text-center">
-        <h1 className="text-3xl font-bold mb-2">Onboarding</h1>
         <div className="flex justify-center mb-1 w-full mt-10">
           {steps.map((_step, index) => (
-            <span
-              key={index}
-              className={`w-8 h-8 rounded-full flex justify-center items-center ${
-                index <= currentStep ? 'bg-amber-600' : 'bg-amber-200'
-              } mr-2`}
-            >
-              <div
-                onClick={() => setCurrentStep(index)}
-                className={`${
-                  index === currentStep ? 'text-white' : 'text-amber-600'
-                } font-semibold cursor-pointer`}
+            <>
+              <span
+                key={index}
+                className={`w-10 h-10 rounded-full flex justify-center items-center ${
+                  index <= currentStep ? 'bg-amber-600' : 'bg-amber-200'
+                } mr-2`}
               >
-                {index + 1}
-              </div>
-            </span>
+                <div
+                  onClick={() => setCurrentStep(index)}
+                  className={`${
+                    index === currentStep ? 'text-white' : 'text-amber-200'
+                  } cursor-pointer`}
+                >
+                  {index + 1}
+                </div>
+              </span>
+            </>
           ))}
         </div>
       </div>

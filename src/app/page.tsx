@@ -8,6 +8,7 @@ import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { Loading } from '@/components/atoms/Loading'
 
 export default function Home() {
   const router = useRouter()
@@ -15,16 +16,12 @@ export default function Home() {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/onboarding')
+      router.push('/newChat')
     }
   }, [status, router])
 
   if (status === 'loading') {
-    return (
-      <div className="flex items-center text-white justify-center min-h-screen">
-        Loading...
-      </div>
-    )
+    return <Loading />
   }
 
   if (status === 'authenticated') {
