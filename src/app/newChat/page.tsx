@@ -15,7 +15,8 @@ import { redirect } from 'next/navigation'
 import womanAnimation from '@/assets/lottie/female-work.json'
 import { useSession } from 'next-auth/react'
 import { useCreateChat } from '@/hooks/useCreateChat'
-import { createContextPrompt } from '@/lib/promptUtils'
+import { contextPrompt, createContextPrompt } from '@/lib/promptUtils'
+import { ObjectSchema } from 'yup'
 
 const steps = [StepOne, StepTwo, StepThree, StepFour, StepFive]
 
@@ -23,19 +24,23 @@ export default function NewChatPage() {
   const { data: session } = useSession()
   const [currentStep, setCurrentStep] = useState(0)
   const [showWelcome, setShowWelcome] = useState(true)
-  const { createChat, isSuccess, data } = useCreateChat()
-  if (!session) {
-    redirect('/') // or to /api/auth/signin
-  }
+  const { mutate: createChat, isSuccess, data } = useCreateChat()
 
-  const methods = useForm({
-    resolver: yupResolver(onboardingSchemas[currentStep]),
+  if (!session) {
+    redirect('/')
+  }
+  const looseObjectSchema: ObjectSchema<Record<string, unknown>> =
+    onboardingSchemas[currentStep] as ObjectSchema<Record<string, unknown>>
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const methods = useForm<any>({
+    resolver: yupResolver(looseObjectSchema),
     mode: 'onChange',
   })
 
   const StepComponent = steps[currentStep]
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: contextPrompt) => {
     if (currentStep < steps.length - 1) {
       return setCurrentStep((prev) => prev + 1)
     }
@@ -46,7 +51,7 @@ export default function NewChatPage() {
     createChat({
       contextPrompt,
       contextRaw,
-      title: 'Onboarding Chat',
+      title: 'Nuevo Chat Creado',
     })
   }
 

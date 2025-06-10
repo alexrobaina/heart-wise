@@ -1,33 +1,28 @@
-// src/hooks/useUpdateChatTitle.ts
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+async function updateChatTitleApi(
+  chatId: string | Array<string> | undefined,
+  title: string,
+) {
+  const res = await fetch('/api/chat/updateTitle', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chatId, title }),
+  })
+  if (!res.ok) throw new Error('Failed to update chat title')
+  return res.json()
+}
 
 export function useUpdateChatTitle(
   chatId: string | Array<string> | undefined,
   initialTitle: string,
 ) {
+  const queryClient = useQueryClient()
   const [valueTitle, setTitle] = useState(initialTitle)
-  const [isSaving, setIsSaving] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-
-  const updateTitleOnServer = useCallback(
-    async (updatedTitle: string) => {
-      setIsSaving(true)
-      try {
-        const res = await fetch('/api/chat/updateTitle', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chatId, title: updatedTitle }),
-        })
-        if (!res.ok) {
-          console.error('Failed to update chat title')
-        }
-      } catch (error) {
-        console.error('Error updating chat title:', error)
-      } finally {
-        setIsSaving(false)
-      }
-    },
-    [chatId],
+  const mutation = useMutation((title: string) =>
+    updateChatTitleApi(chatId, title),
   )
 
   // Debounce the update
@@ -36,18 +31,22 @@ export function useUpdateChatTitle(
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(() => {
       if (valueTitle.trim() !== '') {
-        updateTitleOnServer(valueTitle)
+        mutation.mutate(valueTitle)
       }
-    }, 2000)
+    }, 500)
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [valueTitle, updateTitleOnServer, initialTitle])
+  }, [valueTitle, initialTitle, mutation])
+
+  if (mutation.isSuccess) {
+    queryClient.invalidateQueries(['userChats'])
+  }
 
   return {
     setTitle,
-    isSaving,
+    isSaving: mutation.isLoading,
     valueTitle,
   }
 }
