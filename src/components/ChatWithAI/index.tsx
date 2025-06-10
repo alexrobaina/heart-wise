@@ -9,6 +9,7 @@ import { useUser } from '@/hooks/useUser'
 import { redirect } from 'next/navigation'
 import { ChatBubble } from './components/ChatBubble'
 import { useUpdateChatTitle } from '@/hooks/useUpdateChatTitle'
+import { Loading } from '../atoms/Loading'
 
 interface ChatWithAIProps {
   title: string
@@ -104,9 +105,7 @@ export default function ChatWithAI({
           onChange={(e) => setTitle(e.target.value)}
           className="ml-8 bg-white text-amber-900 text-xl font-semibold focus:outline-none"
         />
-        {isSaving && (
-          <p className="ml-8 text-amber-600 text-sm italic">Saving...</p>
-        )}
+        {isSaving && <Loading size={8} />}
       </div>
       <div className="max-w-lg sm:max-w-4xl w-full mx-auto space-y-2 flex flex-col">
         {messages.length === 0 ? (
