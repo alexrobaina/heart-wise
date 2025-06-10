@@ -29,7 +29,7 @@ export default function ChatWithAI({
   externalScrollRef,
 }: ChatWithAIProps) {
   const { valueTitle, setTitle, isSaving } = useUpdateChatTitle(chatId, title)
-  const { isAuthenticated } = useUser()
+  const { isAuthenticated, user } = useUser()
 
   const { messages, input, setInput, loading, sendMessage } = useChatWithAI(
     chatId,
@@ -110,11 +110,13 @@ export default function ChatWithAI({
       </div>
       <div className="max-w-lg sm:max-w-4xl w-full mx-auto space-y-2 flex flex-col">
         {messages.length === 0 ? (
-          <div className="text-amber-300 mt-80 flex flex-col justify-center gap-4 items-center">
-            <h1 className="text-center text-amber-300 text-xl italic mt-10">
-              ¡Escribe tu primer mensaje para comenzar la conversación!
+          <div className="mt-[30%] flex flex-col justify-center gap-4 -ml-8 items-center">
+            <h1 className="text-center text-amber-900 text-xl ">
+              {`En que te puedo ayudar ${user?.name}`}
             </h1>
-            <p>Cuentame como te sientes y como te puedo ayudar</p>
+            <p className="text-center text-amber-900 text-lg mt-2">
+              Dime como te sientes y que te gustaría resolver
+            </p>
           </div>
         ) : (
           messages.map((msg, idx) => (

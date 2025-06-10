@@ -1,5 +1,4 @@
-// src/hooks/useCreateChat.ts
-import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 
 export async function createChat(data: {
@@ -12,39 +11,5 @@ export async function createChat(data: {
 }
 
 export function useCreateChat() {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<Error | null>(null)
-  const [isSuccess, setSuccess] = useState(false)
-  const [data, setData] = useState(null)
-
-  async function createChatHandler(data: {
-    contextRaw: object
-    contextPrompt: string
-    title?: string
-  }) {
-    setSuccess(false)
-    setLoading(true)
-    setError(null)
-    try {
-      const chat = await createChat(data)
-      setSuccess(true)
-      setData(chat)
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      setError(e)
-      setSuccess(false)
-      throw e
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return {
-    createChat: createChatHandler,
-    loading,
-    isSuccess,
-    error,
-    data,
-  }
+  return useMutation(createChat)
 }
