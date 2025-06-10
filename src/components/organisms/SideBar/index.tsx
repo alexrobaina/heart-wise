@@ -22,11 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const { user: session, isLoading, isAuthenticated } = useUser()
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
-  const {
-    data: chats,
-    isLoading: chatsLoading,
-    error: chatsError,
-  } = useUserChats()
+  const { data: chats, isLoading: chatsLoading } = useUserChats()
 
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
