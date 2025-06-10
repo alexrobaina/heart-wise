@@ -35,19 +35,19 @@ export default function Home() {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <header className="relative bg-gradient-to-br from-amber-400 to-amber-800 text-white py-20 overflow-hidden">
+      <header className="relative bg-amber-50 py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,transparent)]"></div>
+          <div className="absolute inset-0"></div>
         </div>
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
+        <div className="container mx-auto px-6 py-10 relative z-10 h-full mt-[5%]">
+          <div className="flex flex-col lg:flex-row items-center gap-12 ">
             <div className="lg:w-1/2">
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-4xl md:text-5xl font-bold mb-6 leading-tight"
+                className="text-4xl md:text-5xl text-amber-950 font-bold mb-6 leading-tight"
               >
                 Acompañamiento emocional para parejas con IA
               </motion.h1>
@@ -56,7 +56,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-xl mb-8 text-amber-100"
+                className="text-xl mb-8 text-amber-950"
               >
                 Mejora tu relación con herramientas basadas en psicología
                 profesional, disponible 24/7
@@ -70,7 +70,7 @@ export default function Home() {
               >
                 <button
                   onClick={handleLogin}
-                  className="bg-white text-orange-600 hover:bg-amber-50 px-8 py-3 rounded-lg font-semibold text-lg flex items-center justify-center gap-2 transition-all"
+                  className="bg-white text-orange-600 shadow-xl hover:bg-amber-50 px-8 py-3 rounded-lg font-semibold text-lg flex items-center justify-center gap-2 transition-all"
                 >
                   <FcGoogle /> Ingresá con google
                 </button>
@@ -104,10 +104,10 @@ export default function Home() {
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
-            <div className="text-center">
+            {/* <div className="text-center">
               <div className="text-3xl font-bold text-amber-600">186K</div>
               <div className="text-gray-600">Usuarios activos</div>
-            </div>
+            </div> */}
             <div className="text-center">
               <div className="text-3xl font-bold text-amber-600">24/7</div>
               <div className="text-gray-600">Disponibilidad</div>
@@ -330,18 +330,18 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-r from-amber-600 to-amber-800 text-white">
+      <section className="py-20 bg-amber-50 text-white">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-amber-900">
             Mejora tu relación hoy mismo
           </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
+          <p className="text-xl mb-8 max-w-2xl mx-auto text-amber-900">
             Comienza tu viaje hacia una comunicación más saludable y una
             conexión más profunda
           </p>
           <button
             onClick={handleLogin}
-            className="bg-white text-amber-600 hover:bg-amber-50 px-8 py-4 rounded-lg font-semibold text-lg flex items-center justify-center gap-2 transition-all mx-auto"
+            className="bg-white shadow-xl text-amber-600 hover:bg-amber-50 px-8 py-4 rounded-lg font-semibold text-lg flex items-center justify-center gap-2 transition-all mx-auto"
           >
             <FcGoogle /> Comenzar ahora <FiArrowRight />
           </button>
