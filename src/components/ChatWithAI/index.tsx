@@ -16,17 +16,21 @@ interface ChatWithAIProps {
   showScrollDown: boolean
   setShowScrollDown: (show: boolean) => void
   chatId: string | undefined
+  title: string
   externalScrollRef: RefObject<HTMLDivElement>
 }
 
 export default function ChatWithAI({
   chatId,
+  title,
   initialMessages,
   showScrollDown,
   setShowScrollDown,
   externalScrollRef,
 }: ChatWithAIProps) {
+  const { valueTitle, setTitle, isSaving } = useUpdateChatTitle(chatId, title)
   const { isAuthenticated } = useUser()
+
   const { messages, input, setInput, loading, sendMessage } = useChatWithAI(
     chatId,
     initialMessages,

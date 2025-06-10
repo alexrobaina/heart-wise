@@ -24,8 +24,8 @@ export default function ChatPage() {
       <ChatWithAI
         chatId={chatId}
         title={chat[0].title}
-        initialMessages={chat[0].messages}
         showScrollDown={showScrollDown}
+        initialMessages={chat[0].messages}
         setShowScrollDown={setShowScrollDown}
         externalScrollRef={scrollContainerRef}
       />

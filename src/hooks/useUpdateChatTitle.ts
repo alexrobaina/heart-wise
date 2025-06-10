@@ -1,7 +1,10 @@
 // src/hooks/useUpdateChatTitle.ts
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-export function useUpdateChatTitle(chatId: string, initialTitle: string) {
+export function useUpdateChatTitle(
+  chatId: string | undefined,
+  initialTitle: string,
+) {
   const [valueTitle, setTitle] = useState(initialTitle)
   const [isSaving, setIsSaving] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
@@ -10,6 +13,7 @@ export function useUpdateChatTitle(chatId: string, initialTitle: string) {
     async (updatedTitle: string) => {
       setIsSaving(true)
       try {
+        if (chatId) return
         const res = await fetch('/api/chat/updateTitle', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
