@@ -1,14 +1,14 @@
 // app/layout.tsx
 
 import type { Metadata } from 'next'
-import { FaSpinner } from 'react-icons/fa'
 import { Geist, Geist_Mono } from 'next/font/google'
-import './globals.css'
 import { Sidebar } from '@/components/organisms/SideBar'
 import { Providers } from './Providers'
 import { Suspense } from 'react'
+import { Loading } from '@/components/atoms/Loading'
 
-// Load Geist fonts and assign to CSS variables
+import './globals.css'
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -43,13 +43,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-amber-50`}
       >
-        <Suspense
-          fallback={
-            <div className="flex justify-center items-center h-screen">
-              <FaSpinner className="animate-spin h-5 w-5 text-amber-500" />
-            </div>
-          }
-        >
+        <Suspense fallback={<Loading />}>
           <Providers>
             <div className="flex min-h-screen">
               <Sidebar />

@@ -3,27 +3,32 @@
 import { IoMdArrowRoundDown } from 'react-icons/io'
 import { LuSend } from 'react-icons/lu'
 import { useEffect, useRef } from 'react'
+import { FiCopy, FiCheck } from 'react-icons/fi'
 import { ChatMessage, useChatWithAI } from '@/hooks/useChatWithAI'
 import { useUser } from '@/hooks/useUser'
 import { redirect } from 'next/navigation'
 import { ChatBubble } from './components/ChatBubble'
+import { useUpdateChatTitle } from '@/hooks/useUpdateChatTitle'
 
 interface ChatWithAIProps {
-  initialMessages: ChatMessage[]
-  showScrollDown: boolean
-  setShowScrollDown: (show: boolean) => void
+  title: string
   chatId: string
+  showScrollDown: boolean
+  initialMessages: ChatMessage[]
+  setShowScrollDown: (show: boolean) => void
   externalScrollRef: React.RefObject<HTMLDivElement>
 }
 
 export default function ChatWithAI({
   chatId,
+  title,
   initialMessages,
   showScrollDown,
   setShowScrollDown,
   externalScrollRef,
 }: ChatWithAIProps) {
-  const { isAuthenticated } = useUser()
+  const { isAuthenticated, user } = useUser()
+  const { valueTitle, setTitle, isSaving } = useUpdateChatTitle(chatId, title)
   const { messages, input, setInput, loading, sendMessage } = useChatWithAI(
     chatId,
     initialMessages,
@@ -48,14 +53,6 @@ export default function ChatWithAI({
     }
   }, [input, loading])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value)
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
-    }
-  }
-
   useEffect(() => {
     externalScrollRef.current?.scrollTo({
       top: externalScrollRef.current.scrollHeight,
@@ -63,6 +60,14 @@ export default function ChatWithAI({
     })
     setShowScrollDown(false)
   }, [initialMessages, externalScrollRef, setShowScrollDown])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value)
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleScroll = () => {
@@ -91,21 +96,34 @@ export default function ChatWithAI({
   if (!isAuthenticated) return redirect('/')
 
   return (
-    <div className="relative w-full flex flex-col px-4 pb-[120px]">
-      <div className="max-w-md sm:max-w-2xl w-full mx-auto space-y-2 flex flex-col">
+    <div className="relative w-full flex flex-col pb-[140px]">
+      <div className="fixed bg-white h-14 top-0 z-40 w-screen border-b border-amber-200 flex items-center">
+        <input
+          value={valueTitle}
+          placeholder="Chat title..."
+          onChange={(e) => setTitle(e.target.value)}
+          className="ml-8 bg-white text-amber-900 text-xl font-semibold focus:outline-none"
+        />
+        {isSaving && (
+          <p className="ml-8 text-amber-600 text-sm italic">Saving...</p>
+        )}
+      </div>
+      <div className="max-w-lg sm:max-w-4xl w-full mx-auto space-y-2 flex flex-col">
         {messages.length === 0 ? (
-          <div className="text-amber-300 mt-80 flex flex-col justify-center gap-4 items-center">
-            <h1 className="text-center text-amber-300 text-xl italic mt-10">
-              ¡Escribe tu primer mensaje para comenzar la conversación!
+          <div className="p-6 rounded-xl shadow-sm mt-80 flex flex-col justify-center gap-4 items-center bg-amber-100">
+            <h1 className="text-center text-amber-900 text-2xl font-semibold">
+              {`En que puedo ayudarte ${user?.name}?`}
             </h1>
-            <p>Cuentame como te sientes y como te puedo ayudar</p>
+            <p className="text-amber-900 text-md font-semibold">
+              Puedes decirme como te sientes. Nuestra conversación es privada
+            </p>
           </div>
         ) : (
           messages.map((msg, idx) => (
             <ChatBubble
               key={idx}
-              role={msg.role as 'user' | 'assistant'}
               content={msg.content}
+              role={msg.role as 'user' | 'assistant'}
             />
           ))
         )}
@@ -126,7 +144,7 @@ export default function ChatWithAI({
         }}
         className="fixed bottom-8 left-0 right-0 z-40 px-4"
       >
-        <div className="flex flex-col justify-center items-end gap-2 max-w-3xl mx-auto">
+        <div className="flex flex-col justify-center items-end gap-2 sm:max-w-lg md:max-w-3xl lg:max-w-5xl mx-auto">
           {showScrollDown && (
             <button
               onClick={() =>
@@ -150,7 +168,8 @@ export default function ChatWithAI({
               onKeyDown={handleKeyDown}
               placeholder="Escribe tu mensaje..."
               rows={1}
-              className="resize-none w-full rounded-xl px-4 py-8 text-amber-900 placeholder-amber-500 focus:outline-none focus:ring-2 ring-amber-500 focus:ring-amber-500 text-base max-h-[300px] scrollbar-thumb-amber-800 scrollbar-track-transparent scrollbar-thin"
+              className="resize-none w-full shadow-lg rounded-xl px-4 py-8 text-amber-900 placeholder-amber-500 focus:outline-none focus:ring-2 ring-amber-500 
+              focus:ring-amber-500 text-base max-h-[300px] scrollbar-thumb-amber-800 scrollbar-track-transparent scrollbar-thin"
               disabled={loading}
             />
             <button
