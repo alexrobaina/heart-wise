@@ -7,6 +7,8 @@ import { ChatMessage, useChatWithAI } from '@/hooks/useChatWithAI'
 import { useUser } from '@/hooks/useUser'
 import { redirect } from 'next/navigation'
 import { ChatBubble } from './components/ChatBubble'
+import { useUpdateChatTitle } from '@/hooks/useUpdateChatTitle'
+import { Loading } from '../atoms/Loading'
 
 interface ChatWithAIProps {
   initialMessages: ChatMessage[]
@@ -91,8 +93,17 @@ export default function ChatWithAI({
   if (!isAuthenticated) return redirect('/')
 
   return (
-    <div className="relative w-full flex flex-col px-4 pb-[120px]">
-      <div className="max-w-md sm:max-w-2xl w-full mx-auto space-y-2 flex flex-col">
+    <div className="relative w-full flex flex-col pb-[140px]">
+      <div className="fixed bg-white h-14 top-0 z-40 w-screen border-b border-amber-200 flex items-center">
+        <input
+          value={valueTitle}
+          placeholder="Chat title..."
+          onChange={(e) => setTitle(e.target.value)}
+          className="ml-8 bg-white text-amber-900 text-xl font-semibold focus:outline-none"
+        />
+        {isSaving && <Loading size={8} />}
+      </div>
+      <div className="max-w-lg sm:max-w-4xl w-full mx-auto space-y-2 flex flex-col">
         {messages.length === 0 ? (
           <div className="text-amber-300 mt-80 flex flex-col justify-center gap-4 items-center">
             <h1 className="text-center text-amber-300 text-xl italic mt-10">
