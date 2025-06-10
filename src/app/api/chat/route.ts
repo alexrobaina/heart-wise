@@ -26,9 +26,17 @@ export async function POST(req: NextRequest) {
       },
     })
     return NextResponse.json(newChat)
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+    // fallback case
     console.log(error)
-    return NextResponse.json(error)
+    return NextResponse.json(
+      { error: 'An unknown error occurred' },
+      { status: 500 },
+    )
   }
 }
 
@@ -55,12 +63,17 @@ export async function GET(req: NextRequest) {
       },
     })
     return NextResponse.json(chats)
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message)
+      return NextResponse.json(
+        { error: 'Failed to fetch chats: ' + error.message },
+        { status: 500 },
+      )
+    }
     console.log(error)
     return NextResponse.json(
-      { error: 'Failed to fetch chats' },
+      { error: 'Failed to fetch chats: unknown error' },
       { status: 500 },
     )
   }

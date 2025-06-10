@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
 export function useUpdateChatTitle(
-  chatId: string | undefined,
+  chatId: string | Array<string> | undefined,
   initialTitle: string,
 ) {
   const [valueTitle, setTitle] = useState(initialTitle)
@@ -13,7 +13,6 @@ export function useUpdateChatTitle(
     async (updatedTitle: string) => {
       setIsSaving(true)
       try {
-        if (chatId) return
         const res = await fetch('/api/chat/updateTitle', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -33,17 +32,18 @@ export function useUpdateChatTitle(
 
   // Debounce the update
   useEffect(() => {
+    if (valueTitle === initialTitle) return
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(() => {
       if (valueTitle.trim() !== '') {
         updateTitleOnServer(valueTitle)
       }
-    }, 4000)
+    }, 2000)
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [valueTitle, updateTitleOnServer])
+  }, [valueTitle, updateTitleOnServer, initialTitle])
 
   return {
     setTitle,

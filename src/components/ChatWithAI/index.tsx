@@ -15,9 +15,9 @@ interface ChatWithAIProps {
   initialMessages: ChatMessage[]
   showScrollDown: boolean
   setShowScrollDown: (show: boolean) => void
-  chatId: string | undefined
+  chatId: string | Array<string> | undefined
   title: string
-  externalScrollRef: RefObject<HTMLDivElement>
+  externalScrollRef: RefObject<HTMLDivElement | null>
 }
 
 export default function ChatWithAI({

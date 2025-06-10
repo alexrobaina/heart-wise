@@ -3,10 +3,12 @@ import Google from 'next-auth/providers/google'
 import Facebook from 'next-auth/providers/facebook'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
+import type { Session, User } from 'next-auth'
+import type { NextAuthOptions } from 'next-auth'
 
 const prisma = new PrismaClient()
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     Google({
@@ -19,13 +21,13 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    session({ session, user }) {
-      session.user.id = user.id
-      session.user.email = user.email || null // Ensure email is set to null if not available
-      session.user.name = user.name || null // Ensure name is set to null if not available
-      session.user.image = user.image || null // Ensure image is set to null if not available
+    session({ session, user }: { session: Session; user: User }) {
+      if (session.user) {
+        session.user.id = user.id
+        session.user.email = user.email ?? null
+        session.user.name = user.name ?? null
+        session.user.image = user.image ?? null
+      }
       return session
     },
   },

@@ -33,8 +33,12 @@ export async function GET(
     })
 
     return NextResponse.json(chats)
-  } catch (error) {
-    console.error('Failed to fetch chats:', error)
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
     return NextResponse.json(
       { error: 'Failed to fetch chats' },
       { status: 500 },

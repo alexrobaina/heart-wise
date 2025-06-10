@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-async function fetchUserMessages(chatId: string | undefined) {
+async function fetchUserMessages(chatId: string | Array<string> | undefined) {
   try {
     const response = await axios.get(`/api/chat/${chatId}`)
     return response.data
@@ -13,7 +13,7 @@ async function fetchUserMessages(chatId: string | undefined) {
   }
 }
 
-export function useUserChat(chatId: string | undefined) {
+export function useUserChat(chatId: string | Array<string> | undefined) {
   return useQuery({
     queryKey: ['userChats', chatId],
     queryFn: () => chatId && fetchUserMessages(chatId),
