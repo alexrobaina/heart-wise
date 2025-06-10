@@ -8,8 +8,8 @@ import { Loading } from '@/components/atoms/Loading'
 
 export default function ChatPage() {
   const params = useParams()
-
-  const { data: chat, isLoading, error } = useUserChat(params?.chat)
+  const chatId = params?.chat || undefined
+  const { data: chat, isLoading, error } = useUserChat(chatId)
   const [showScrollDown, setShowScrollDown] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
 
@@ -22,8 +22,8 @@ export default function ChatPage() {
       className="pt-24 pb-16 pr-8 overflow-y-auto h-screen scrollbar-thumb-amber-900 scrollbar-track-transparent scrollbar-thin"
     >
       <ChatWithAI
+        chatId={chatId}
         title={chat[0].title}
-        chatId={params?.chat}
         initialMessages={chat[0].messages}
         showScrollDown={showScrollDown}
         setShowScrollDown={setShowScrollDown}

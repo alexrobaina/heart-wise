@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-async function fetchUserMessages(chatId: string) {
+async function fetchUserMessages(chatId: string | undefined) {
   try {
     const response = await axios.get(`/api/chat/${chatId}`)
     return response.data

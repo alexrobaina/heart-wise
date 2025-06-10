@@ -1,5 +1,6 @@
 'use client'
 
+import { RefObject } from 'react'
 import { IoMdArrowRoundDown } from 'react-icons/io'
 import { LuSend } from 'react-icons/lu'
 import { useEffect, useRef } from 'react'
@@ -14,8 +15,8 @@ interface ChatWithAIProps {
   initialMessages: ChatMessage[]
   showScrollDown: boolean
   setShowScrollDown: (show: boolean) => void
-  chatId: string
-  externalScrollRef: React.RefObject<HTMLDivElement>
+  chatId: string | undefined
+  externalScrollRef: RefObject<HTMLDivElement>
 }
 
 export default function ChatWithAI({

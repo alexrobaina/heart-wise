@@ -7,7 +7,7 @@ export type ChatMessage = {
 }
 
 export function useChatWithAI(
-  chatId: string,
+  chatId: string | undefined,
   initialMessages: ChatMessage[] = [],
 ) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
