@@ -67,7 +67,7 @@ export default function NewChatPage() {
 
   if (showWelcome) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-amber-100 px-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-amber-50 px-4">
         <WelcomeScreen
           title="Bienvenido a Heart wise"
           subtitle="Comienza el proceso de onboarding para conocerte mejor"
@@ -80,27 +80,33 @@ export default function NewChatPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-amber-100 px-4">
+    <div className="flex flex-col py-26 items-center min-h-screen bg-amber-50 px-4">
       <div className="mb-6 text-center">
         <div className="flex justify-center mb-1 w-full mt-10">
           {steps.map((_step, index) => (
-            <>
+            <React.Fragment key={index}>
               <span
-                key={index}
                 className={`w-10 h-10 rounded-full flex justify-center items-center ${
                   index <= currentStep ? 'bg-amber-600' : 'bg-amber-200'
-                } mr-2`}
+                }`}
               >
                 <div
                   onClick={() => setCurrentStep(index)}
                   className={`${
-                    index === currentStep ? 'text-white' : 'text-amber-200'
-                  } cursor-pointer`}
+                    index === currentStep ? 'text-white' : 'text-gray-800'
+                  } ${
+                    index < currentStep ? 'text-white' : 'text-gray-800'
+                  } cursor-pointer transition-colors`}
                 >
                   {index + 1}
                 </div>
               </span>
-            </>
+              {index < steps.length - 1 && (
+                <div
+                  className={`${index < currentStep ? 'h-[1px] bg-orange-500' : ' bg-amber-300'} h-[1px] w-10 mt-5 mx-1 rounded-md transition-colors`}
+                />
+              )}
+            </React.Fragment>
           ))}
         </div>
       </div>
