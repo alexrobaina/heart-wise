@@ -18,7 +18,7 @@ export default function ChatPage() {
   return (
     <section
       ref={scrollContainerRef}
-      className="pt-24 pb-16 pr-8 overflow-y-auto h-screen scrollbar-thumb-amber-900 scrollbar-track-transparent scrollbar-thin"
+      className="pt-24 pb-16 sm:pr-8 overflow-y-auto h-screen scrollbar-thumb-amber-900 scrollbar-track-transparent scrollbar-thin"
     >
       <ChatWithAI
         chatId={chat}
