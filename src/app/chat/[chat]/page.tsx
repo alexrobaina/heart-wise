@@ -16,18 +16,14 @@ export default function ChatPage() {
   if (error) return <p>Error loading chat</p>
 
   return (
-    <section
-      ref={scrollContainerRef}
-      className="pt-24 pb-16 sm:pr-8 overflow-y-auto h-screen scrollbar-thumb-amber-900 scrollbar-track-transparent scrollbar-thin"
-    >
-      <ChatWithAI
-        chatId={chat}
-        title={dataChat[0].title}
-        showScrollDown={showScrollDown}
-        initialMessages={dataChat[0].messages}
-        setShowScrollDown={setShowScrollDown}
-        externalScrollRef={scrollContainerRef}
-      />
-    </section>
+    <ChatWithAI
+      chatId={chat}
+      title={dataChat[0].title}
+      showScrollDown={showScrollDown}
+      initialMessages={dataChat[0].messages}
+      setShowScrollDown={setShowScrollDown}
+      externalScrollRef={scrollContainerRef}
+      scrollContainerRef={scrollContainerRef}
+    />
   )
 }

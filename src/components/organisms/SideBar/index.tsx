@@ -10,6 +10,9 @@ import { useUser } from '@/hooks/useUser'
 import { redirect, useParams } from 'next/navigation'
 import { useUserChats } from '@/hooks/useUserChats'
 import { HiMenu } from 'react-icons/hi'
+import { RiDeleteBinLine } from 'react-icons/ri'
+import { Loading } from '@/components/atoms/Loading'
+import { useRemoveChat } from '@/hooks/useRemoveChat'
 
 interface SidebarProps {
   children?: ReactNode
@@ -17,12 +20,18 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const param = useParams()
-  console.log(param)
-
+  const [chatIdRemove, setChatIdRemove] = useState('')
+  const { mutate: removeChat, isSuccess } = useRemoveChat()
   const { user: session, isLoading, isAuthenticated } = useUser()
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
   const { data: chats, isLoading: chatsLoading } = useUserChats()
+
+  useEffect(() => {
+    if (isSuccess && param.chat === chatIdRemove) {
+      redirect('/newChat')
+    }
+  })
 
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
@@ -54,7 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
           hidden md:flex flex-col
         "
       >
-        <p className="text-center text-amber-500 mb-4">Loading…</p>
+        <Loading />
         {children}
       </aside>
     )
@@ -101,10 +110,28 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
               chats.map((chat) => (
                 <li
                   key={chat.id}
-                  className={`${chat.id === param.chat && 'bg-amber-100'} hover:bg-amber-200 p-2 text-sm text-amber-900 rounded cursor-pointer transition`}
-                  onClick={() => redirect(`/chat/${chat.id}`)}
+                  className={`flex justify-between items-center ${
+                    chat.id === param.chat ? 'bg-amber-100' : ''
+                  } hover:bg-amber-200 p-2 h-10 text-sm text-amber-900 rounded cursor-pointer transition`}
                 >
-                  {chat.title || 'Untitled Chat'}
+                  <div
+                    className="flex-grow capitalize truncate"
+                    onClick={() => redirect(`/chat/${chat.id}`)}
+                  >
+                    {chat.title || 'Untitled Chat'}
+                  </div>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setChatIdRemove(chat.id)
+                      removeChat(chat.id)
+                    }}
+                    className="p-1 rounded hover:bg-amber-100 text-amber-400 hover:text-red-400"
+                    aria-label={`Delete chat ${chat.title || 'Untitled Chat'}`}
+                  >
+                    <RiDeleteBinLine size={18} />
+                  </button>
                 </li>
               ))}
             {!chatsLoading && chats?.length === 0 && (
