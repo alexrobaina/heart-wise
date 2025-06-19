@@ -22,7 +22,11 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
   buttonText = 'Comenzar',
 }) => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center space-y-6">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center ">
+      <h1 className="text-xl sm:text-4xl font-bold">{title}</h1>
+      {subtitle && (
+        <p className="text-xl mt-2 font-medium text-gray-600">{subtitle}</p>
+      )}
       {imageUrl && (
         <Image
           src={imageUrl}
@@ -32,14 +36,10 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
       )}
       {lottieAnimation && (
         <div className="w-full max-w-md mx-auto">
-          <LottieAnimation animation={lottieAnimation} width="100%" />
+          <LottieAnimation animation={lottieAnimation} width="90%" />
         </div>
       )}
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold">{title}</h1>
-        {subtitle && <p className="text-gray-600">{subtitle}</p>}
-      </div>
-      <Button onClick={onStart} className="mt-4">
+      <Button onClick={onStart} className="-mt-6 z-30">
         {buttonText}
       </Button>
     </div>

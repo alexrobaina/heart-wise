@@ -20,13 +20,13 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Heart wise',
+  title: 'Soul Connection',
   description: 'A platform for AI-driven relationship insights',
   openGraph: {
-    title: 'Heart wise',
+    title: 'Soul Connection',
     description: 'A platform for AI-driven relationship insights',
     url: 'https://consciouslove.com',
-    siteName: 'Heart wise',
+    siteName: 'Soul Connection',
   },
 }
 
@@ -38,16 +38,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="scrollbar-thumb-gray-900 scrollbar-track-transparent scrollbar-thin"
+      className="scrollbar-thumb-amber-600 scrollbar-track-transparent scrollbar-thin"
     >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-amber-50`}
       >
         <Suspense fallback={<Loading />}>
           <Providers>
-            <div className="flex min-h-screen">
+            <div className="relative flex h-screen">
               <Sidebar />
-              <main className="flex-1 h-full">{children}</main>
+              <main className="flex-1 overflow-y-auto h-screen">
+                {children}
+              </main>
             </div>
           </Providers>
         </Suspense>

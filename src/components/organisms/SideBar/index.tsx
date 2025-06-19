@@ -13,6 +13,7 @@ import { HiMenu } from 'react-icons/hi'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { Loading } from '@/components/atoms/Loading'
 import { useRemoveChat } from '@/hooks/useRemoveChat'
+import { BsChatLeftHeartFill } from 'react-icons/bs'
 
 interface SidebarProps {
   children?: ReactNode
@@ -80,13 +81,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         <HiMenu className="text-amber-600" size={24} />
       </button>
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen w-64 flex flex-col overflow-hidden bg-white border-r border-amber-200 p-4
-                    transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0 shadow-lg' : '-translate-x-full'} md:static md:translate-x-0 md:shadow-none md:flex`}
+        className={`fixed top-0 left-0 z-50 h-screen w-64 flex flex-col bg-white border-r border-amber-200 p-4
+              overflow-y-auto
+              duration-300 ease-in-out ${isOpen ? 'md:translate-x-0' : '-translate-x-full'} md:static md:translate-x-0 md:shadow-lg`}
       >
         {/* Logo / Título */}
         <div className="flex items-center mb-6">
           <span className="ml-2 text-lg font-semibold text-amber-900">
-            Heart Wise
+            Soul Connection
           </span>
         </div>
 
@@ -101,7 +103,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         </button>
 
         {/* Chats List */}
-        <nav className="flex-1 overflow-y-auto">
+        <nav className="flex-grow">
           <ul className="space-y-1">
             {chatsLoading && (
               <li className="p-3 text-sm text-amber-600">Cargando chats...</li>
@@ -112,7 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                   key={chat.id}
                   className={`flex justify-between items-center ${
                     chat.id === param.chat ? 'bg-amber-100' : ''
-                  } hover:bg-amber-200 p-2 h-10 text-sm text-amber-900 rounded cursor-pointer transition`}
+                  } hover:bg-amber-200 py-2 p-2 h-10 text-sm text-amber-900 rounded cursor-pointer transition`}
                 >
                   <div
                     className="flex-grow capitalize truncate"
@@ -120,18 +122,28 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                   >
                     {chat.title || 'Untitled Chat'}
                   </div>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setChatIdRemove(chat.id)
-                      removeChat(chat.id)
-                    }}
-                    className="p-1 rounded hover:bg-amber-100 text-amber-400 hover:text-red-400"
-                    aria-label={`Delete chat ${chat.title || 'Untitled Chat'}`}
-                  >
-                    <RiDeleteBinLine size={18} />
-                  </button>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() =>
+                        redirect(`/chat/${chat.id}/inviteConnection`)
+                      }
+                      className="p-1 rounded hover:bg-amber-100 text-amber-400 hover:text-red-400"
+                      aria-label={`invite connection chat ${chat.title || 'Untitled Chat'}`}
+                    >
+                      <BsChatLeftHeartFill size={18} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setChatIdRemove(chat.id)
+                        removeChat(chat.id)
+                      }}
+                      className="p-1 rounded hover:bg-amber-100 text-amber-400 hover:text-red-400"
+                      aria-label={`Delete chat ${chat.title || 'Untitled Chat'}`}
+                    >
+                      <RiDeleteBinLine size={18} />
+                    </button>
+                  </div>
                 </li>
               ))}
             {!chatsLoading && chats?.length === 0 && (
