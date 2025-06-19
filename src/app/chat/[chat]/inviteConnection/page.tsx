@@ -14,7 +14,7 @@ export default function ChatPage() {
     <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center ">
       <h1 className="text-xl sm:text-4xl font-bold">Conecta con el alma</h1>
       <p className="text-xl mt-2 font-medium text-gray-600">
-        Mejora tus conecciones enviando este codigo a tu pareja
+        Mejora tus conecciones enviando con este codigo a tu pareja
       </p>
       <div className="w-full max-w-md mx-auto">
         <LottieAnimation animation={hugConnection} width="90%" />
