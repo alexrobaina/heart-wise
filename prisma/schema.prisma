@@ -19,41 +19,58 @@ model User {
 
   // Relations
   sessions    Session[]
-  couple1     Couple[]     @relation("User1Couples")
-  couple2     Couple[]     @relation("User2Couples")
+  connections ConnectionMember[]
   accounts    Account[]
   chats       Chat[]
-  inviteCodes InviteCode[] @relation("UserInviterCodes")
-  usedCodes   InviteCode[] @relation("UserUsedCodes")
+  inviteCodes InviteCode[]       @relation("UserInviterCodes")
+  usedCodes   InviteCode[]       @relation("UserUsedCodes")
   Message     Message[]
 }
 
-model Couple {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+model Connection {
+  id        String         @id @default(cuid())
+  createdAt DateTime       @default(now())
+  type      ConnectionType
 
-  // Relation to both users
-  user1   User   @relation("User1Couples", fields: [user1Id], references: [id])
-  user1Id String
+  members    ConnectionMember[]
+  chats      Chat[]
+  InviteCode InviteCode[]
+}
 
-  user2   User   @relation("User2Couples", fields: [user2Id], references: [id])
-  user2Id String
+enum ConnectionType {
+  couple
+  friends
+  team
+  other
+}
+
+model ConnectionMember {
+  id           String   @id @default(cuid())
+  userId       String
+  connectionId String
+  joinedAt     DateTime @default(now())
+
+  user       User       @relation(fields: [userId], references: [id])
+  connection Connection @relation(fields: [connectionId], references: [id])
+
+  @@unique([userId, connectionId])
 }
 
 model Chat {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  title      String   @default("New Conversation")
-  isArchived Boolean  @default(false)
-
-  // Relations
-  userId   String
-  user     User      @relation(fields: [userId], references: [id])
-  messages Message[]
-
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  title         String   @default("New Conversation")
+  isArchived    Boolean  @default(false)
   context       Json? // Store raw onboarding data
   contextPrompt String? // Store generated prompt
+
+  // Relations
+  userId       String
+  user         User        @relation(fields: [userId], references: [id])
+  messages     Message[]
+  Connection   Connection? @relation(fields: [connectionId], references: [id])
+  connectionId String?
 }
 
 model Message {
@@ -113,12 +130,14 @@ model VerificationToken {
 }
 
 model InviteCode {
-  id        String    @id @default(cuid())
-  code      String    @unique
-  inviterId String
-  inviter   User      @relation("UserInviterCodes", fields: [inviterId], references: [id])
-  createdAt DateTime  @default(now())
-  expiresAt DateTime?
+  id           String      @id @default(cuid())
+  code         String      @unique
+  inviterId    String
+  inviter      User        @relation("UserInviterCodes", fields: [inviterId], references: [id])
+  connectionId String? // Add this to link to a connection
+  connection   Connection? @relation(fields: [connectionId], references: [id])
+  createdAt    DateTime    @default(now())
+  expiresAt    DateTime?
 
   used     Boolean @default(false)
   usedById String?

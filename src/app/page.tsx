@@ -88,7 +88,7 @@ export default function Home() {
                 <div className="relative bg-white rounded-2xl overflow-hidden shadow-2xl">
                   <Image
                     src="/landingpage.png"
-                    alt="Heartwise App Preview"
+                    alt="SoulConnection App Preview"
                     width={600}
                     height={600}
                     className="w-full h-auto"
@@ -186,7 +186,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Cómo funciona Heartwise
+              Cómo funciona Soul Connection
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Tres simples pasos para mejorar tu relación
@@ -355,7 +355,7 @@ export default function Home() {
             <div className="mb-6 md:mb-0">
               <div className="flex items-center gap-2 mb-4">
                 <RiRobot2Line className="text-2xl text-amber-400" />
-                <span className="text-xl font-bold">Heartwise</span>
+                <span className="text-xl font-bold">Soul Connection</span>
               </div>
               <p className="text-gray-400">
                 Acompañamiento emocional para parejas con IA
@@ -383,7 +383,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            © {new Date().getFullYear()} Heartwise. Todos los derechos
+            © {new Date().getFullYear()} Soul Connection. Todos los derechos
             reservados.
           </div>
         </div>

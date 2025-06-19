@@ -1,29 +1,12 @@
+// src/components/organisms/Onboarding/StepOne/index.tsx
 import React from 'react'
 import { useFormContext, useController } from 'react-hook-form'
 import { FormGroup } from '@/components/molecules/FormGroup'
-import { OptionType, ReactSelect } from '@/components/atoms/ReactSelect'
+import { ReactSelect } from '@/components/atoms/ReactSelect'
 import { InputText } from '@/components/atoms/InputText'
 import { Radio } from '@/components/atoms/Radio'
-
-const relationshipOptions: OptionType[] = [
-  { value: 'casados', label: 'Casados' },
-  { value: 'en pareja', label: 'En pareja' },
-  { value: 'solteros', label: 'Solteros' },
-  { value: 'divorciados', label: 'Divorciados' },
-  { value: 'viudos', label: 'Viudos' },
-]
-
-const genderOptions: OptionType[] = [
-  { value: 'masculino', label: 'Masculino' },
-  { value: 'femenino', label: 'Femenino' },
-  { value: 'no binario', label: 'No binario' },
-  { value: 'transgénero', label: 'Transgénero' },
-  { value: 'género fluido', label: 'Género fluido' },
-  { value: 'prefiero no decir', label: 'Prefiero no decir' },
-  { value: 'otro', label: 'Otro' },
-]
-
-const yesNoOptions = ['Sí', 'No']
+import { genderOptions, relationshipOptions } from './constants'
+import { yesNoOptions } from '../constants'
 
 export const StepOne = () => {
   const {
@@ -45,10 +28,20 @@ export const StepOne = () => {
 
   // partnerGender
   const {
-    field: { onChange: onGenderChange, value: genderValue },
-    fieldState: { error: genderError },
+    field: { onChange: onPartnerGenderChange, value: partnerGenderValue },
+    fieldState: { error: partnerGenderError },
   } = useController({
     name: 'partnerGender',
+    control,
+    defaultValue: null,
+  })
+
+  // userGender
+  const {
+    field: { onChange: onUserGenderChange, value: userGenderValue },
+    fieldState: { error: userGenderError },
+  } = useController({
+    name: 'userGender',
     control,
     defaultValue: null,
   })
@@ -57,8 +50,12 @@ export const StepOne = () => {
     ? relationshipOptions.find((o) => o.value === relValue)
     : null
 
-  const genderSelectedOption = genderValue
-    ? genderOptions.find((o) => o.value === genderValue)
+  const partnetGenderSelectedOption = partnerGenderValue
+    ? genderOptions.find((o) => o.value === partnerGenderValue)
+    : null
+
+  const userGenderSelectedOption = userGenderValue
+    ? genderOptions.find((o) => o.value === userGenderValue)
     : null
 
   const livingTogetherSelected = watch('livingTogether')
@@ -66,9 +63,13 @@ export const StepOne = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Información de la pareja</h2>
+      <h2 className="text-2xl font-bold">
+        Quiénes son y desde dónde construyen su relación
+      </h2>
       <p className="text-gray-600">
-        Completa los siguientes campos para conocer mejor a tu pareja.
+        La edad, identidad y lugar de origen de ambos pueden influir en la forma
+        en que viven la relación. Estos datos nos ayudan a adaptar el
+        acompañamiento a tu realidad y cultura.
       </p>
       <FormGroup
         label="¿Cuál es tu relación actual con tu pareja?"
@@ -76,9 +77,9 @@ export const StepOne = () => {
         error={relError?.message || errors.relationshipStatus?.message}
       >
         <ReactSelect
+          isClearable
           options={relationshipOptions}
           placeholder="Selecciona una opción"
-          isClearable
           value={relationshipStatusOption}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
@@ -89,22 +90,42 @@ export const StepOne = () => {
       </FormGroup>
 
       <FormGroup
-        label="¿Con qué género se identifica tu pareja?"
-        htmlFor="partnerGender"
-        error={genderError?.message || errors.partnerGender?.message}
+        label="¿Con que genero te identificas?"
+        htmlFor="userGender"
+        error={userGenderError?.message || errors.userGender?.message}
       >
         <ReactSelect
           options={genderOptions}
           placeholder="Selecciona una opción"
           isClearable
-          value={genderSelectedOption}
+          value={userGenderSelectedOption}
           onChange={(selected) =>
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
-            onGenderChange(selected ? selected.value : null)
+            onUserGenderChange(selected ? selected.value : null)
           }
           className="w-full"
-          error={genderError?.message || errors.partnerGender?.message}
+          error={userGenderError?.message || errors.userGender?.message}
+        />
+      </FormGroup>
+
+      <FormGroup
+        label="¿Con qué género se identifica tu pareja?"
+        htmlFor="partnerGender"
+        error={partnerGenderError?.message || errors.partnerGender?.message}
+      >
+        <ReactSelect
+          isClearable
+          options={genderOptions}
+          placeholder="Selecciona una opción"
+          value={partnetGenderSelectedOption}
+          onChange={(selected) =>
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            onPartnerGenderChange(selected ? selected.value : null)
+          }
+          className="w-full"
+          error={partnerGenderError?.message || errors.partnerGender?.message}
         />
       </FormGroup>
 

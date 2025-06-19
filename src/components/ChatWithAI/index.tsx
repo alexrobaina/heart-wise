@@ -118,7 +118,7 @@ export default function ChatWithAI({
           {messages.length === 0 ? (
             <div className="mt-[30%] flex flex-col justify-center gap-4 -ml-8 items-center">
               <h1 className="text-center text-amber-900 text-xl ">
-                {`En que te puedo ayudar ${user?.name}`}
+                {`En que te puedo ayudar hoy ${user?.name}`}
               </h1>
               <p className="text-center text-amber-900 text-lg mt-2">
                 Dime como te sientes y que te gustaría resolver

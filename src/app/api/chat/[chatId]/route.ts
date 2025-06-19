@@ -31,6 +31,7 @@ export async function GET(
             createdAt: 'asc',
           },
         },
+        Connection: true,
       },
     })
 
