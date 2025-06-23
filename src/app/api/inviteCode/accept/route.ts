@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../../auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
+import { authOptions } from '../../auth/[...nextauth]/route'
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)
@@ -9,84 +9,84 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const { code, chatId } = await req.json()
+  if (!code || typeof code !== 'string') {
+    return NextResponse.json({ error: 'Code is required' }, { status: 400 })
+  }
+  if (!chatId || typeof chatId !== 'string') {
+    return NextResponse.json({ error: 'ChatId is required' }, { status: 400 })
+  }
+
   try {
-    const body = await req.json()
-    const { code } = body
+    const userId = session.user.id
 
-    if (!code) {
-      return NextResponse.json(
-        { error: 'Invite code is required' },
-        { status: 400 },
-      )
-    }
-
-    const invite = await prisma.inviteCode.findUnique({
-      where: { code },
-      include: { connection: true, inviter: true },
-    })
-
-    if (!invite) {
-      return NextResponse.json(
-        { error: 'Invalid invite code' },
-        { status: 404 },
-      )
-    }
-
-    if (invite.used) {
-      return NextResponse.json(
-        { error: 'Invite code already used' },
-        { status: 400 },
-      )
-    }
-
-    if (invite.expiresAt && invite.expiresAt < new Date()) {
-      return NextResponse.json(
-        { error: 'Invite code expired' },
-        { status: 400 },
-      )
-    }
-
-    // Add current user as member of the connection (avoid duplicates)
-    const existingMember = await prisma.connectionMember.findUnique({
+    // Find valid invite code and related connection & inviter
+    const invite = await prisma.inviteCode.findFirst({
       where: {
-        userId_connectionId: {
-          userId: session.user.id,
-          connectionId: invite.connectionId!,
+        code,
+        used: false,
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+      },
+      include: {
+        inviter: true,
+        connection: {
+          include: {
+            members: true,
+          },
         },
       },
     })
 
-    if (!existingMember) {
+    if (!invite) {
+      return NextResponse.json(
+        { error: 'Invalid or expired code' },
+        { status: 404 },
+      )
+    }
+
+    // Check if user is already a member of the connection
+    const isMember = invite.connection.members.some(
+      (m: { userId: string }) => m.userId === userId,
+    )
+    if (!isMember) {
       await prisma.connectionMember.create({
         data: {
-          userId: session.user.id,
-          connectionId: invite.connectionId!,
+          userId,
+          connectionId: invite.connectionId,
           joinedAt: new Date(),
         },
       })
     }
 
-    // Mark invite as used and set usedBy
-    await prisma.inviteCode.update({
-      where: { code },
+    // Update the chat with the connectionId passed from front end
+    await prisma.chat.update({
+      where: { id: chatId },
       data: {
-        used: true,
-        usedById: session.user.id,
+        connectionId: invite.connectionId,
       },
     })
 
+    // Mark invite code as used and link the user who used it
+    await prisma.inviteCode.update({
+      where: { id: invite.id },
+      data: { used: true, usedById: userId },
+    })
+
     return NextResponse.json({
-      message: 'Successfully joined the connection',
-      connectionId: invite.connectionId,
+      message: 'Connection accepted successfully',
+      inviter: {
+        id: invite.inviter.id,
+        name: invite.inviter.name,
+        email: invite.inviter.email,
+        image: invite.inviter.image,
+      },
+      chatId,
     })
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(error.message)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
-    return NextResponse.json(
-      { error: 'Failed to accept invite code' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Unknown error' }, { status: 500 })
   }
 }

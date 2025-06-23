@@ -112,7 +112,13 @@ export default function ChatWithAI({
             onChange={(e) => setTitle(e.target.value)}
             className="ml-8 bg-white text-amber-900 text-xl font-semibold focus:outline-none"
           />
-          {isSaving && <Loading size={8} />}
+          {isSaving && (
+            <Loading
+              centerScreen={false}
+              className="h-4 w-4 justify-center items-center "
+              size={8}
+            />
+          )}
         </div>
         <div className="max-w-lg sm:max-w-4xl w-full mx-auto space-y-2 flex flex-col">
           {messages.length === 0 ? (

@@ -3,20 +3,18 @@ import { Button } from '@/components/atoms/Button'
 
 interface NavigationControlsProps {
   onPrev: () => void
-  isFirstStep: boolean
   isLastStep: boolean
   isNextDisabled: boolean
 }
 
 export const NavigationControls: React.FC<NavigationControlsProps> = ({
   onPrev,
-  isFirstStep,
   isLastStep,
   isNextDisabled,
 }) => {
   return (
     <div className="flex justify-between mt-6">
-      <Button disabled={isFirstStep} variant="secondary" onClick={onPrev}>
+      <Button variant="secondary" onClick={onPrev}>
         Anterior
       </Button>
 
