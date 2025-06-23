@@ -71,6 +71,7 @@ export default function NewChatPage() {
     }
   }
 
+
   if (showWelcome) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-amber-50 px-4">
