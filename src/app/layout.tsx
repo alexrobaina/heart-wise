@@ -43,7 +43,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-amber-50`}
       >
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<Loading size={20} />}>
           <Providers>
             <div className="relative flex h-screen">
               <Sidebar />

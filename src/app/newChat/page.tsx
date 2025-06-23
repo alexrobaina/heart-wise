@@ -25,6 +25,8 @@ export default function NewChatPage() {
   const [currentStep, setCurrentStep] = useState(0)
   const [showWelcome, setShowWelcome] = useState(true)
   const { mutate: createChat, isSuccess, data } = useCreateChat()
+  const [codeToAccept, setCodeToAccept] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   if (!session) {
     redirect('/')
@@ -58,18 +60,37 @@ export default function NewChatPage() {
     }
   })
 
-  const onBack = () => setCurrentStep((prev) => Math.max(prev - 1, 0))
+  const onBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1)
+    } else {
+      setShowWelcome(true)
+      setCodeToAccept(null)
+      setError(null)
+      methods.reset()
+    }
+  }
+
 
   if (showWelcome) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-amber-50 px-4">
-        <WelcomeScreen
-          title="Bienvenido a Soul Connection"
-          subtitle="Comienza el proceso de onboarding para conocerte mejor"
-          onStart={() => setShowWelcome(false)}
-          buttonText="Comenzar"
-          lottieAnimation={womanPsychology}
-        />
+        {!codeToAccept && (
+          <WelcomeScreen
+            title="Bienvenido a Soul Connection"
+            subtitle="Comienza el proceso de onboarding para conocerte mejor"
+            lottieAnimation={womanPsychology}
+            onStart={() => setShowWelcome(false)}
+            buttonText="Comenzar nuevo chat"
+          />
+        )}
+        {codeToAccept && (
+          <div>
+            <h2>Código aceptado: {codeToAccept}</h2>
+            {/* Aquí puedes redirigir, cargar datos o mostrar algo */}
+          </div>
+        )}
+        {error && <p className="text-red-600 mt-4">{error}</p>}
       </div>
     )
   }
@@ -107,7 +128,6 @@ export default function NewChatPage() {
           <StepComponent />
           <NavigationControls
             onPrev={onBack}
-            isFirstStep={currentStep === 0}
             isLastStep={currentStep === steps.length - 1}
             isNextDisabled={!methods.formState.isValid}
           />

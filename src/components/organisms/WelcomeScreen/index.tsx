@@ -8,9 +8,9 @@ interface WelcomeScreenProps {
   title: string
   subtitle?: string
   imageUrl?: string
-  onStart: () => void
-  buttonText?: string
   lottieAnimation?: object
+  onStart: () => void // para iniciar chat nuevo
+  buttonText?: string
 }
 
 export const WelcomeScreen: FC<WelcomeScreenProps> = ({
@@ -39,9 +39,9 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
           <LottieAnimation animation={lottieAnimation} width="90%" />
         </div>
       )}
-      <Button onClick={onStart} className="-mt-6 z-30">
-        {buttonText}
-      </Button>
+      <div className="max-w-md w-full mt-6 flex flex-col gap-4">
+        <Button onClick={onStart}>{buttonText}</Button>
+      </div>
     </div>
   )
 }

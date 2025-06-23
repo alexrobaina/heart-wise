@@ -111,11 +111,6 @@ export function FormFieldRenderer({ field }) {
           )
         : null
       break
-    case 'custom':
-      fieldEl = render
-        ? render({ ...fieldProps, value: fieldProps.value ?? '' }, { error })
-        : null
-      break
   }
 
   return (

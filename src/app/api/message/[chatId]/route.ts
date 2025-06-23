@@ -1,3 +1,4 @@
+// src/app/api/message/[chatId]/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
@@ -40,46 +41,108 @@ export async function POST(
       },
     })
 
-    // Fetch last N messages for context (both user and ai) for this chat
-    const history = await prisma.message.findMany({
-      where: { chatId },
-      orderBy: { createdAt: 'asc' },
-      take: 10,
-    })
-
-    // Find chat prompt context (optional)
-    const chat = await prisma.chat.findUnique({
+    // Get current chat and its connection
+    const currentChat = await prisma.chat.findUnique({
       where: { id: chatId },
+      include: { Connection: true },
     })
 
-    const systemPrompt =
-      chat?.contextPrompt ||
-      'Eres un coach empático de relaciones. Da consejos amorosos. Nunca reveles secretos entre personas. Ayuda a que el usuario entienda mejor a su pareja.'
+    if (!currentChat) {
+      return NextResponse.json({ error: 'Chat not found' }, { status: 404 })
+    }
+
+    let chatHistoryMessages = []
+    let contextPrompts = ''
+
+    if (currentChat.connectionId) {
+      // Connected chat: include messages from all related chats in connection
+
+      // Get all chats in the same connection
+      const relatedChats = await prisma.chat.findMany({
+        where: { connectionId: currentChat.connectionId },
+        select: { id: true, contextPrompt: true, userId: true },
+      })
+
+      const relatedChatIds = relatedChats.map((c: { id: string }) => c.id)
+
+      // Get messages from all related chats
+      const allMessages = await prisma.message.findMany({
+        where: { chatId: { in: relatedChatIds } },
+        orderBy: { createdAt: 'asc' },
+      })
+
+      // Create combined context prompts
+      contextPrompts = relatedChats
+        .filter((c: { contextPrompt: string }) => c.contextPrompt)
+        .map(
+          (c: { userId: string; contextPrompt: string }) =>
+            `--- Onboarding for ${c.userId} ---\n${c.contextPrompt}`,
+        )
+        .join('\n\n')
+
+      chatHistoryMessages = allMessages
+    } else {
+      // Individual chat: only messages from this chat
+      const messages = await prisma.message.findMany({
+        where: { chatId },
+        orderBy: { createdAt: 'asc' },
+      })
+
+      if (currentChat.contextPrompt) {
+        contextPrompts = currentChat.contextPrompt
+      }
+
+      chatHistoryMessages = messages
+    }
+
+    const globalPrompt =
+      'You are a compassionate relationship therapist with training in CBT, psychoanalysis, and Jungian theory. Guide each person with empathy, emotional safety, and without revealing private details to others.'
 
     // Build OpenAI messages array
     const chatHistory = [
-      { role: 'system', content: systemPrompt },
-      ...history.map((m) => ({
-        role: mapToOpenAIRole(m.role),
-        content: m.content,
-      })),
-      { role: 'user', content: message },
+      { role: 'system', content: globalPrompt },
+      { role: 'system', content: contextPrompts },
     ]
 
-    // Call OpenAI
+    let currentUserMarker: string | null = null
+    for (const msg of chatHistoryMessages) {
+      if (msg.userId !== currentUserMarker) {
+        currentUserMarker = msg.userId || 'ai'
+        chatHistory.push({
+          role: 'system',
+          content: `--- Messages from ${currentUserMarker} ---`,
+        })
+      }
+
+      chatHistory.push({
+        role: mapToOpenAIRole(msg.role),
+        content: msg.content,
+      })
+    }
+
+    // Push new user message at the end
+    chatHistory.push({
+      role: 'user',
+      content: message,
+    })
+
+    // Generate AI response
     const completion = await openai.chat.completions.create({
       model: 'gpt-4',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       messages: chatHistory,
     })
 
     const aiResponse =
-      completion.choices?.[0]?.message?.content || 'Lo siento, no entendí.'
+      completion.choices?.[0]?.message?.content ||
+      'Sorry, I did not understand.'
 
-    // Save AI response message
+    // Save AI message
     await prisma.message.create({
       data: {
         chatId,
-        userId: null, // AI messages have no userId
+        userId: null,
         role: 'ai',
         content: aiResponse,
       },

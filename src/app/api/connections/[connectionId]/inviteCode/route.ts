@@ -35,10 +35,28 @@ export async function POST(
     }
 
     const isMember = connection.members.some(
-      (m) => m.userId === session.user.id,
+      (m: { userId: string }) => m.userId === session.user.id,
     )
     if (!isMember) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+
+    // Try to find an existing invite code that is NOT linked to any connection
+    const existingCode = await prisma.inviteCode.findFirst({
+      where: {
+        connectionId: null,
+        used: false,
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    if (existingCode) {
+      // Return the unused, unlinked invite code
+      return NextResponse.json({ inviteCode: existingCode.code })
     }
 
     // Generate a unique invite code string and ensure uniqueness

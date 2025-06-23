@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 
 export async function createChat(data: {
@@ -11,5 +11,11 @@ export async function createChat(data: {
 }
 
 export function useCreateChat() {
-  return useMutation(createChat)
+  const queryClient = useQueryClient()
+
+  return useMutation(createChat, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userChats'])
+    },
+  })
 }
