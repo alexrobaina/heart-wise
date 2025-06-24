@@ -1,13 +1,22 @@
 import { InputText } from '@/components/atoms/InputText'
 import { Radio } from '@/components/atoms/Radio'
 import { ReactSelect } from '@/components/atoms/ReactSelect'
-import React from 'react'
+import React, { FC } from 'react'
 import { useController, useFormContext } from 'react-hook-form'
 import { FormGroup } from '../FormGroup'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-export function FormFieldRenderer({ field }) {
+interface OptionType {
+  label: string
+  value: string
+}
+
+interface Props {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  field: any
+  options?: OptionType[] | string[] | undefined
+}
+
+export const FormFieldRenderer: FC<Props> = ({ field }) => {
   const {
     control,
     setValue,
@@ -19,13 +28,13 @@ export function FormFieldRenderer({ field }) {
     name,
     type,
     label,
-    placeholder,
+    showIf,
+    render,
     options,
     htmlFor,
     errorKey,
-    showIf,
     inputType,
-    render,
+    placeholder,
   } = field
 
   const {
@@ -90,9 +99,9 @@ export function FormFieldRenderer({ field }) {
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {options.map((option: { value: any; label: any }) => (
             <Radio
-              key={option.value || option}
-              label={option.label || option}
               name={name}
+              key={option.value}
+              label={option.label || option}
               value={option.value || option}
               checked={fieldProps.value === (option.value || option)}
               onChange={() =>

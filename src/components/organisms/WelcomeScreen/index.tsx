@@ -34,6 +34,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = ({
           className="max-w-xs w-full mx-auto"
         />
       )}
+
       {lottieAnimation && (
         <div className="w-full max-w-md mx-auto">
           <LottieAnimation animation={lottieAnimation} width="90%" />

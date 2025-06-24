@@ -1,7 +1,7 @@
 // components/molecules/OptionList/index.tsx
-import Radio from '@/components/atoms/Checkbox'
-import { Checkbox } from '@/components/atoms/Radio'
-import React from 'react'
+import { Checkbox } from '@/components/atoms/Checkbox'
+import { Radio } from '@/components/atoms/Radio'
+import React, { ChangeEvent } from 'react'
 
 interface Option {
   label: string
@@ -49,19 +49,21 @@ export const OptionList: React.FC<OptionListProps> = ({
               key={value}
               label={label}
               checked={isChecked}
-              onChange={(e) => handleChange(value, e.target.checked)}
-              showInput={other && isChecked}
               inputValue={otherText}
+              showInput={other && isChecked}
               onInputChange={onOtherTextChange}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleChange(value, e.target.checked)
+              }
             />
           )
         } else {
           return (
             <Radio
-              key={value}
-              label={label}
+              key={name}
               name={name}
               value={value}
+              label={label}
               checked={isChecked}
               onChange={() => onChange([value], other ? otherText : '')}
             />

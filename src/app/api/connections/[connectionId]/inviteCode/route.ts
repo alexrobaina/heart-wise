@@ -41,7 +41,6 @@ export async function POST(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-
     // Try to find an existing invite code that is NOT linked to any connection
     const existingCode = await prisma.inviteCode.findFirst({
       where: {

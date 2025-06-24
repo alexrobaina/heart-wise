@@ -3,7 +3,6 @@ import React from 'react'
 
 interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
-  key: string
   className?: string
 }
 

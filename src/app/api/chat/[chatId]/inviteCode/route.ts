@@ -107,7 +107,6 @@ export async function GET(
   }
 
   try {
-    // Get chat with connection
     const chat = await prisma.chat.findUnique({
       where: { id: chatId },
       select: {
@@ -116,10 +115,14 @@ export async function GET(
     })
 
     if (!chat || !chat.connectionId) {
-      return NextResponse.json({ inviteCode: null, used: null })
+      return NextResponse.json({
+        inviteCode: null,
+        used: null,
+        connectionType: null,
+      })
     }
 
-    // Find active invite code for connection (including used field)
+    // Find active invite code with related connection type
     const inviteCode = await prisma.inviteCode.findFirst({
       where: {
         connectionId: chat.connectionId,
@@ -128,15 +131,53 @@ export async function GET(
       orderBy: {
         createdAt: 'desc',
       },
+      include: {
+        connection: {
+          select: {
+            type: true,
+            members: {
+              select: {
+                user: {
+                  select: {
+                    name: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     })
 
     if (!inviteCode) {
-      return NextResponse.json({ inviteCode: null, used: null })
+      return NextResponse.json({
+        inviteCode: null,
+        used: null,
+        connectionType: null,
+        connectionUsers: [],
+      })
     }
+
+    // Map members to user info array
+    const connectionUsers =
+      inviteCode.connection?.members
+        .map(
+          (member: { user: { name: string | null; email: string | null } }) =>
+            member.user,
+        )
+        .filter(
+          (user: {
+            name: string | null
+            email: string | null
+          }): user is { name: string | null; email: string | null } => !!user,
+        ) ?? []
 
     return NextResponse.json({
       inviteCode: inviteCode.code,
-      used: inviteCode.used, // true or false
+      used: inviteCode.used,
+      connectionType: inviteCode.connection?.type || null,
+      connectionUsers,
     })
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -144,7 +185,7 @@ export async function GET(
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
     return NextResponse.json(
-      { error: 'Error desconocido al obtener código' },
+      { error: 'Unknown error fetching invite code' },
       { status: 500 },
     )
   }
