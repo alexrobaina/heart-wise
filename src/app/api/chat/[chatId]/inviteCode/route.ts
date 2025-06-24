@@ -107,7 +107,6 @@ export async function GET(
   }
 
   try {
-    // Get chat with connectionId
     const chat = await prisma.chat.findUnique({
       where: { id: chatId },
       select: {
