@@ -8,8 +8,6 @@ import { ChatMessage, useChatWithAI } from '@/hooks/useChatWithAI'
 import { useUser } from '@/hooks/useUser'
 import { redirect } from 'next/navigation'
 import { ChatBubble } from './components/ChatBubble'
-import { useUpdateChatTitle } from '@/hooks/useUpdateChatTitle'
-import { Loading } from '../atoms/Loading'
 
 interface ChatWithAIProps {
   title: string
@@ -23,14 +21,12 @@ interface ChatWithAIProps {
 
 export default function ChatWithAI({
   chatId,
-  title,
   initialMessages,
   showScrollDown,
   setShowScrollDown,
   externalScrollRef,
   scrollContainerRef,
 }: ChatWithAIProps) {
-  const { valueTitle, setTitle, isSaving } = useUpdateChatTitle(chatId, title)
   const { isAuthenticated, user } = useUser()
 
   const { messages, input, setInput, loading, sendMessage } = useChatWithAI(
@@ -105,7 +101,7 @@ export default function ChatWithAI({
       className="pt-24 pb-16 sm:pr-8 overflow-y-auto h-screen scrollbar-thumb-amber-900 scrollbar-track-transparent scrollbar-thin"
     >
       <div className="relative w-full flex flex-col pb-[140px]">
-        <div className="fixed bg-white h-14 top-0 z-40 w-screen border-b border-amber-200 flex items-center">
+        {/* <div className="fixed bg-white h-14 top-0 z-40 w-screen border-b border-amber-200 flex items-center">
           <input
             value={valueTitle}
             placeholder="Chat title..."
@@ -114,12 +110,12 @@ export default function ChatWithAI({
           />
           {isSaving && (
             <Loading
+              size={20}
               centerScreen={false}
-              className="h-4 w-4 justify-center items-center "
-              size={8}
+              className="justify-center items-center "
             />
           )}
-        </div>
+        </div> */}
         <div className="max-w-lg sm:max-w-4xl w-full mx-auto space-y-2 flex flex-col">
           {messages.length === 0 ? (
             <div className="mt-[30%] flex flex-col justify-center gap-4 -ml-8 items-center">

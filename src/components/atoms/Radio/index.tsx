@@ -3,19 +3,16 @@ import React from 'react'
 
 interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
-  key: string
   className?: string
 }
 
 export const Radio: React.FC<RadioProps> = ({
-  key,
   label,
   className = '',
   ...props
 }) => {
   return (
     <label
-      key={key}
       className={`inline-flex items-center space-x-2 cursor-pointer ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
     >
       <input

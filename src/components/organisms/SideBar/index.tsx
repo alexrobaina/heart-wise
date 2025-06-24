@@ -14,6 +14,8 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { Loading } from '@/components/atoms/Loading'
 import { useRemoveChat } from '@/hooks/useRemoveChat'
 import { BsChatLeftHeartFill } from 'react-icons/bs'
+import { useUpdateChatTitle } from '@/hooks/useUpdateChatTitle'
+import { useChatTitle } from '@/context/ChatTitleContext'
 
 interface SidebarProps {
   children?: ReactNode
@@ -27,6 +29,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
   const { data: chats, isLoading: chatsLoading } = useUserChats()
+  const { title } = useChatTitle()
+  const { valueTitle, setTitle, isSaving } = useUpdateChatTitle(
+    param.chat,
+    title,
+  )
+
+  useEffect(() => {
+    if (param.chat) {
+      const chat = chats?.find((c) => c.id === param.chat)
+      if (chat) {
+        setTitle(chat.title || 'Untitled Chat')
+      }
+    }
+  }, [param.chat, chats, setTitle])
 
   useEffect(() => {
     if (isSuccess && param.chat === chatIdRemove) {
@@ -73,6 +89,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const logautHandler = () => signOut({ callbackUrl: '/' })
   return (
     <>
+      <div className="fixed bg-white h-14 top-0 z-40 w-screen border-b border-amber-200 flex items-center">
+        {param.chat && (
+          <input
+            value={valueTitle.charAt(0).toUpperCase() + valueTitle.slice(1)}
+            placeholder="Chat title..."
+            onChange={(e) => setTitle(e.target.value)}
+            className="ml-[30px] sm:ml-[290px] bg-white text-amber-900 text-xl font-semibold focus:outline-none"
+          />
+        )}
+        {isSaving && (
+          <Loading
+            size={20}
+            centerScreen={false}
+            className="justify-center items-center "
+          />
+        )}
+      </div>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden fixed top-2 right-4 z-50 p-2 rounded bg-amber-100 hover:bg-amber-200 transition"

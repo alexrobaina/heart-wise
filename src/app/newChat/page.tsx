@@ -95,7 +95,7 @@ export default function NewChatPage() {
   }
 
   return (
-    <div className="flex flex-col py-26 items-center min-h-screen bg-amber-50 px-4 overflow-auto pb-10">
+    <div className="flex flex-col py-16 items-center min-h-screen bg-amber-50 px-4 overflow-auto pb-10">
       <div className="mb-6 text-center">
         <div className="flex justify-center mb-1 w-full mt-10">
           {steps.map((_step, index) => (
