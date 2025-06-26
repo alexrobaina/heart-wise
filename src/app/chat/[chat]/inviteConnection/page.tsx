@@ -9,11 +9,7 @@ import { useAcceptInviteCode } from '@/hooks/inviteCode/useAcceptInviteCode'
 import { useGenerateInviteCode } from '@/hooks/inviteCode/useGenerateInviteCode'
 import { useInviteCode } from '@/hooks/inviteCode/useInviteCode'
 import { useSession } from 'next-auth/react'
-
-const connectionType = {
-  COUPLE: 'couple',
-  FRIEND: 'friend',
-}
+import { connectionType } from './constants'
 
 export default function InviteConnectionPage() {
   const router = useRouter()
@@ -22,6 +18,41 @@ export default function InviteConnectionPage() {
   const [codeInput, setCodeInput] = useState('')
   const [copied, setCopied] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  function renderUserNamesWithAnd(
+    users:
+      | {
+          id: string | undefined
+          name?: string | undefined
+          email?: string | undefined
+          image?: string | undefined
+        }[]
+      | undefined,
+    currentUserEmail: string | undefined,
+  ): React.ReactNode | undefined {
+    if (!users || users.length === 0) return undefined
+
+    const filteredUsers = users.filter(
+      (user) => user.email !== currentUserEmail,
+    )
+
+    if (filteredUsers.length === 0) return undefined
+
+    const userElements = filteredUsers.map((user) => (
+      <span key={user.id} className="font-semibold">
+        {user.name}
+      </span>
+    ))
+
+    if (userElements.length === 0) return undefined
+
+    return userElements.length > 1
+      ? userElements.reduce<React.ReactNode[]>(
+          (prev, curr) => [...prev, ' and ', curr],
+          [],
+        )
+      : userElements[0]
+  }
 
   // Use custom hooks
   const { data, isLoading: loading } = useInviteCode(chat)
@@ -34,13 +65,8 @@ export default function InviteConnectionPage() {
     isSuccess: acceptSuccess,
   } = useAcceptInviteCode()
 
-  // Copy invite code handler
   const copyToClipboard = () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     if (!data?.inviteCode) return
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     navigator.clipboard.writeText(data.inviteCode).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -66,8 +92,6 @@ export default function InviteConnectionPage() {
     return <Loading />
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   if (data?.connectionType === connectionType.COUPLE && data?.used) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
@@ -75,27 +99,11 @@ export default function InviteConnectionPage() {
           You have connected with your partner
         </h1>
         <p className="text-lg mt-2 text-gray-600">
-          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-          {/* @ts-ignore */}
-          {data.connectionUsers
-            .filter(
-              (user: { email: string; id: string; name: string }) =>
-                user.email !== session?.user.email,
-            )
-            .map((user: { id: string; name: string }) => (
-              <span key={user.id} className="font-semibold">
-                {user.name}
-              </span>
-            ))
-            .reduce(
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              (prev, curr) => (prev === null ? curr : [prev, ' and ', curr]),
-              null,
-            )}
+          {renderUserNamesWithAnd(
+            data.connectionUsers,
+            session?.user?.email ?? undefined,
+          )}
         </p>
-        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-        {/* @ts-ignore */}
         {data?.inviteCode && (
           <div
             onClick={copyToClipboard}
@@ -103,8 +111,6 @@ export default function InviteConnectionPage() {
           >
             <p className="text-lg font-semibold">Código de invitación:</p>
             <p className="text-2xl font-bold tracking-widest select-all">
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
               {data.inviteCode}
             </p>
             {copied && <p className="text-sm text-green-500">¡Copiado!</p>}
@@ -120,9 +126,6 @@ export default function InviteConnectionPage() {
       <p className="text-xl mt-2 font-medium text-gray-600">
         Enviale este codigo a la persona con la que quieres conectar
       </p>
-
-      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-      {/* @ts-ignore */}
       {!data?.inviteCode && (
         <div className="mt-6 max-w-md mx-auto flex flex-col items-center gap-2">
           <InputText
@@ -141,8 +144,6 @@ export default function InviteConnectionPage() {
           </Button>
         </div>
       )}
-      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-      {/* @ts-ignore */}
       {data?.inviteCode && (
         <div
           onClick={copyToClipboard}
@@ -150,15 +151,11 @@ export default function InviteConnectionPage() {
         >
           <p className="text-lg font-semibold">Código de invitación:</p>
           <p className="text-2xl font-bold tracking-widest select-all">
-            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-            {/* @ts-ignore */}
             {data.inviteCode}
           </p>
           {copied && <p className="text-sm text-green-500">¡Copiado!</p>}
         </div>
       )}
-      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-      {/* @ts-ignore */}
       {!data?.inviteCode && (
         <Button
           onClick={() => generateCode()}

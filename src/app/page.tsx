@@ -87,11 +87,11 @@ export default function Home() {
                 <div className="absolute -inset-4 bg-amber-500 rounded-2xl blur-lg opacity-30"></div>
                 <div className="relative bg-white rounded-2xl overflow-hidden shadow-2xl">
                   <Image
-                    src="/landingpage.png"
-                    alt="SoulConnection App Preview"
                     width={600}
                     height={600}
+                    src="/landingpage.png"
                     className="w-full h-auto"
+                    alt="SoulConnection App Preview"
                   />
                 </div>
               </motion.div>

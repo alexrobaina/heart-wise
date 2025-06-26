@@ -11,21 +11,14 @@ export default function ChatPage() {
   const { chat } = useParams()
   const { data: dataChat, isLoading, error } = useUserChat(chat)
   const [showScrollDown, setShowScrollDown] = useState(false)
-  const { setTitle, title } = useChatTitle()
+  const { setTitle } = useChatTitle()
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
-  const previousChatId = useRef<string | undefined | string[]>(undefined)
 
   useEffect(() => {
-    if (
-      chat !== previousChatId.current &&
-      dataChat &&
-      dataChat.length > 0 &&
-      dataChat[0].title !== title
-    ) {
+    if (dataChat && dataChat.length > 0) {
       setTitle(dataChat[0].title)
-      previousChatId.current = chat
     }
-  }, [chat, dataChat, setTitle, title])
+  }, [chat, dataChat, setTitle])
 
   if (isLoading) return <Loading />
   if (error) return <p>Error loading chat</p>

@@ -3,6 +3,16 @@ import axios from 'axios'
 
 interface InviteCodeResponse {
   inviteCode: string | null
+  connectionType?: string
+  used?: boolean
+  chatId?: string | string[] | undefined
+  connectionUsers?:
+    | Array<{
+        email: string
+        id: string
+        name: string
+      }>
+    | undefined
 }
 
 export function useInviteCode(chatId: string | string[] | undefined) {
