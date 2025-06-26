@@ -1,1 +1,12 @@
-{}
+{
+  "metadata": {
+    "title": "Soul Connection",
+    "description": "A platform for AI-driven relationship insights",
+    "openGraph": {
+      "title": "Soul Connection",
+      "description": "A platform for AI-driven relationship insights",
+      "url": "https://consciouslove.com",
+      "siteName": "Soul Connection"
+    }
+  }
+}
