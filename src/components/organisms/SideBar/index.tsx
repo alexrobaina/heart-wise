@@ -29,20 +29,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
   const { data: chats, isLoading: chatsLoading } = useUserChats()
-  const { title } = useChatTitle()
-  const { valueTitle, setTitle, isSaving } = useUpdateChatTitle(
-    param.chat,
-    title,
-  )
+  const { title, setTitle } = useChatTitle()
+  const { isSaving, mutation } = useUpdateChatTitle(param.chat)
 
-  useEffect(() => {
-    if (param.chat) {
-      const chat = chats?.find((c) => c.id === param.chat)
-      if (chat) {
-        setTitle(chat.title || 'Untitled Chat')
-      }
-    }
-  }, [param.chat, chats, setTitle])
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTimeout(() => {
+      mutation.mutate(e.target.value)
+    }, 500)
+    setTitle(e.target.value)
+  }
 
   useEffect(() => {
     if (isSuccess && param.chat === chatIdRemove) {
@@ -92,9 +87,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       <div className="fixed bg-white h-14 top-0 z-40 w-screen border-b border-amber-200 flex items-center">
         {param.chat && (
           <input
-            value={valueTitle.charAt(0).toUpperCase() + valueTitle.slice(1)}
             placeholder="Chat title..."
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={handleTitleChange}
+            value={title.charAt(0).toUpperCase() + title.slice(1)}
             className="ml-[30px] sm:ml-[290px] bg-white text-amber-900 text-xl font-semibold focus:outline-none"
           />
         )}
