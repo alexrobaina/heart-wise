@@ -44,8 +44,8 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row items-center gap-12 ">
             <div className="lg:w-1/2">
               <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
                 className="text-4xl md:text-5xl text-amber-950 font-bold mb-6 leading-tight"
               >
@@ -53,8 +53,8 @@ export default function Home() {
               </motion.h1>
 
               <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="text-xl mb-8 text-amber-950"
               >

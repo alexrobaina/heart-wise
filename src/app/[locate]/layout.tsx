@@ -52,20 +52,22 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
+      suppressHydrationWarning
       className="scrollbar-thumb-amber-600 scrollbar-track-transparent scrollbar-thin"
     >
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-amber-50`}
       >
         <Suspense fallback={<Loading size={20} />}>
           <Providers>
             <div className="relative flex h-screen">
-              <Sidebar />
-              <main className="flex-1 overflow-y-auto h-screen">
-                <NextIntlClientProvider messages={messages}>
+              <NextIntlClientProvider messages={messages}>
+                <Sidebar />
+                <main className="flex-1 overflow-y-auto h-screen">
                   {children}
-                </NextIntlClientProvider>
-              </main>
+                </main>
+              </NextIntlClientProvider>
             </div>
           </Providers>
         </Suspense>

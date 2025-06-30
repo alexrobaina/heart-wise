@@ -1,12 +1,17 @@
 'use client'
 import { FC, useState } from 'react'
 
+interface Option {
+  label: string
+  value: string
+}
+
 interface DropDownProps {
   name?: string
   selected: string
   className?: string
-  onSelect: (option: string) => void
-  options: { label: string; value: string }[]
+  onSelect: (option: Option) => void
+  options: Option[]
 }
 
 export const DropDown: FC<DropDownProps> = ({
@@ -38,9 +43,9 @@ export const DropDown: FC<DropDownProps> = ({
             data-slot="icon"
           >
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
-              clip-rule="evenodd"
+              clipRule="evenodd"
             />
           </svg>
         </button>
@@ -57,7 +62,7 @@ export const DropDown: FC<DropDownProps> = ({
             <button
               key={option.label}
               onClick={() => {
-                onSelect(option.value)
+                onSelect(option)
                 setIsOpen(false)
               }}
               className={`block w-full px-4 py-2 text-left text-sm ${
@@ -65,7 +70,7 @@ export const DropDown: FC<DropDownProps> = ({
               } hover:bg-amber-100`}
               role="menuitem"
             >
-              {option.value}
+              {option.label}
             </button>
           ))}
         </div>

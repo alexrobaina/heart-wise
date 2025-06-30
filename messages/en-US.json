@@ -8,5 +8,8 @@
       "url": "https://consciouslove.com",
       "siteName": "Soul Connection"
     }
+  },
+  "SidebarHeader": {
+    "newChat": "New Chat"
   }
 }

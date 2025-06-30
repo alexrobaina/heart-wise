@@ -9,7 +9,7 @@ import { useUserChats } from '@/hooks/useUserChats'
 import { useRemoveChat } from '@/hooks/useRemoveChat'
 import { useUpdateChatTitle } from '@/hooks/useUpdateChatTitle'
 import { useChatTitle } from '@/context/ChatTitleContext'
-
+import { usePathname, useRouter } from 'next/navigation'
 import { Loading } from '@/components/atoms/Loading'
 import { TopBar } from './components/TopBar'
 import { MobileMenuToggle } from './components/MobileMenuToggle'
@@ -23,6 +23,8 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const params = useParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
   const { user: session, isLoading: userLoading, isAuthenticated } = useUser()
@@ -30,7 +32,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const { mutate: removeChat, isSuccess } = useRemoveChat()
   const { title, setTitle } = useChatTitle()
   const { isSaving, mutation } = useUpdateChatTitle(params.chat || '')
-  const [selected, setSelected] = React.useState<string>('English')
+  const localeFromPath = pathname.split('/')[1] || 'en-US'
+  const [selected, setSelected] = React.useState<{
+    label: string
+    value: string
+  }>({
+    label: localeFromPath === 'en-US' ? 'English' : 'Español',
+    value: localeFromPath,
+  })
 
   // Auto-redirect after chat delete
   useEffect(() => {
@@ -61,9 +70,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 
   const logout = () => signOut({ callbackUrl: '/' })
 
-  const handleLanguageChange = (value: string) => {
-    console.log(value)
-    setSelected(value)
+  const handleLanguageChange = (newLocale: {
+    label: string
+    value: string
+  }) => {
+    const segments = pathname.split('/')
+    if (segments.length > 1) {
+      segments[1] = newLocale.value
+    } else {
+      segments.push(newLocale.value)
+    }
+    const newPath = segments.join('/')
+    router.push(newPath)
+    setIsOpen(false)
+    setSelected(newLocale)
   }
 
   if (!isAuthenticated) return <>{children}</>

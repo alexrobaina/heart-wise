@@ -8,14 +8,17 @@ interface TopBarProps {
   title: string
   chatId?: string | string[] | undefined
   isSaving: boolean
-  languageSelected: string
-  onLanguageChange: (lang: string) => void
+  languageSelected: {
+    label: string
+    value: string
+  }
+  onLanguageChange: (vale: { label: string; value: string }) => void
   onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const options = [
-  { label: 'English', value: 'English' },
-  { label: 'Español', value: 'Español' },
+  { label: 'English', value: 'en-US' },
+  { label: 'Español', value: 'es-ES' },
 ]
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -42,13 +45,18 @@ export const TopBar: React.FC<TopBarProps> = ({
           className="justify-center items-center"
         />
       )}
-      <DropDown
-        name="Language"
-        options={options}
-        className="ml-auto mr-4"
-        selected={languageSelected}
-        onSelect={onLanguageChange}
-      />
+      <div
+        className="fixed top-0 right-1 md:right-4 h-14 w-64 flex items-center justify-end"
+        data-testid="top-bar"
+      >
+        <DropDown
+          name="Language"
+          options={options}
+          className="ml-auto mr-4"
+          onSelect={onLanguageChange}
+          selected={languageSelected.label}
+        />
+      </div>
     </div>
   )
 }
