@@ -65,13 +65,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(chats)
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.log(error.message)
       return NextResponse.json(
         { error: 'Failed to fetch chats: ' + error.message },
         { status: 500 },
       )
     }
-    console.log(error)
     return NextResponse.json(
       { error: 'Failed to fetch chats: unknown error' },
       { status: 500 },
